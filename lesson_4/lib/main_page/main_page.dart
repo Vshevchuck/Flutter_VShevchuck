@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../login_page/login_page.dart';
+import '../login_page/widgets/google_sign_widget.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
@@ -29,11 +30,16 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Center(child: const Text('Notes')),
+        backgroundColor: Colors.brown[200],
+      ),
       body: SingleChildScrollView(
           child: Center(
               child: Column(children: [
         GoogleAccount(),
-        Text('Firebase connected'),
         ElevatedButton(
             onPressed: () {
               FirebaseFirestore.instance
@@ -77,6 +83,7 @@ class _MainPageState extends State<MainPage> {
                 },
               );
             }),
+
       ]))),
     ));
   }
@@ -105,7 +112,7 @@ class _GoogleAccountState extends State<GoogleAccount> {
   Widget build(BuildContext context) {
     GoogleSignInAccount? user = GoogleSignState.currentUser;
     if (user != null) {
-      return Column(mainAxisAlignment:MainAxisAlignment.center,children: [
+      return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         ListTile(
           leading: GoogleUserCircleAvatar(
             identity: user,
@@ -115,7 +122,13 @@ class _GoogleAccountState extends State<GoogleAccount> {
         )
       ]);
     } else {
-      return const Text('You are not signed in with a google account');
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        child: Align(
+            alignment: Alignment.center,
+            child: Text('You are not signed in with a google account',
+                style: TextStyle(fontSize: 17))),
+      );
     }
   }
 }
