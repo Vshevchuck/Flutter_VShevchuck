@@ -13,10 +13,10 @@ class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainPage> createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
   void initFireBase() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
@@ -39,106 +39,144 @@ class _MainPageState extends State<MainPage> {
             title: const Text('Notes'),
             backgroundColor: Colors.brown[200],
           ),
-          body: Center(
-              child: Column(children: [
-            GoogleAccount(),
-            ElevatedButton(
-                onPressed: () {
-                  FirebaseFirestore.instance
-                      .collection('items')
-                      .add({'elements': 'element', 'titles': 'title'});
-                },
-                child: const Text("Add")),
-            StreamBuilder(
-                stream:
-                    FirebaseFirestore.instance.collection('items').snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection('items')
-                          .doc(snapshot
-                              .data!.docs[snapshot.data!.docs.length - 1].id)
-                          .delete();
-                    },
-                    child: const Text("Dell last"),
-                  );
-                }),
-            Stack(
-              children: [
-                StreamBuilder(
-                    stream: FirebaseFirestore.instance
+          body: SingleChildScrollView(
+            child: Center(
+                child: Column(children: [
+              GoogleAccount(),
+              ElevatedButton(
+                  onPressed: () {
+                    FirebaseFirestore.instance
                         .collection('items')
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData) return const Text("No elements");
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (BuildContext context, index) {
-                          final elements =
-                              snapshot.data!.docs[index].get('elements');
-                          final title =
-                              snapshot.data!.docs[index].get('titles');
-                          return ListTile(
-                              title: Column(
-                            children: [
-                              Text('$title-$index'),
-                              Text('$elements'),
-                            ],
-                          ));
-                        },
-                      );
-                    }),CardWidget(title: "test", body: "just watch"),
-                Column(
-                  children: [
-                    SizedBox(height: GoogleSignState.currentUser == null ?  screenHeight / 1.5 : screenHeight / 1.7),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: IconButton(
-                        iconSize: 35,
-                        onPressed: showAlert,
-                        icon: const Icon(Icons.pending_outlined),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ]))),
+                        .add({'elements': 'element', 'titles': 'title'});
+                  },
+                  child: const Text("Add")),
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('items')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('items')
+                            .doc(snapshot
+                                .data!.docs[snapshot.data!.docs.length - 1].id)
+                            .delete();
+                      },
+                      child: const Text("Dell last"),
+                    );
+                  }),
+              Stack(
+                children: [
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('items')
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData) return const Text("No elements");
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (BuildContext context, index) {
+                            final elements =
+                                snapshot.data!.docs[index].get('elements');
+                            final title =
+                                snapshot.data!.docs[index].get('titles');
+                            return CardWidget(title: title, body: elements);
+                          },
+                        );
+                      }),
+                  WriteNoteWidget(),
+                ],
+              ),
+            ])),
+          )),
     );
   }
-  showAlert(){
+}
+
+class WriteNoteWidget extends StatefulWidget {
+  const WriteNoteWidget({Key? key}) : super(key: key);
+
+  @override
+  State<WriteNoteWidget> createState() => _WriteNoteWidgetState();
+}
+
+class _WriteNoteWidgetState extends State<WriteNoteWidget> {
+  @override
+  Widget build(BuildContext context) {
+    var screenHeight = (MediaQuery.of(context).size.height);
+    return Column(
+      children: [
+        SizedBox(height: getHeightIcon()),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: IconButton(
+            iconSize: 35,
+            onPressed: showAlert,
+            icon: const Icon(Icons.pending_outlined),
+          ),
+        )
+      ],
+    );
+  }
+
+  double getHeightIcon() {
+    var screenHeight = (MediaQuery.of(context).size.height);
+    double height = GoogleSignState.currentUser == null
+        ? screenHeight / 1.5
+        : screenHeight / 1.7;
+    return height;
+  }
+
+  showAlert() {
+    String title = '';
+    String body = '';
     // set up the button
     Widget addButton = TextButton(
       child: const Text("Add"),
-      onPressed:() {Navigator.of(context).pop();},
+      onPressed: () {
+        if (body != '') {
+          FirebaseFirestore.instance
+              .collection('items')
+              .add({'elements': body, 'titles': title});
+          Navigator.of(context).pop();
+        }
+      },
     );
 
-    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: const TextField(decoration: InputDecoration(
-          hintText: 'Title',
-      )),
-      content: TextField(decoration: InputDecoration(
-          labelText: 'Body',
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 2, color: Colors.grey),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 2, color: Colors.yellow),
-            borderRadius: BorderRadius.circular(15),
-          )),),
+      title: TextField(
+          onChanged: (String str) {
+            title = str;
+          },
+          decoration: const InputDecoration(
+            hintText: 'Title',
+          )),
+      content: TextField(
+        onChanged: (String str) {
+          body = str;
+        },
+        decoration: InputDecoration(
+            // Added this
+            labelText: 'Body',
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(width: 2, color: Colors.grey),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(width: 2, color: Colors.yellow),
+              borderRadius: BorderRadius.circular(15),
+            )),
+      ),
       actions: [
         addButton,
       ],
     );
 
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {

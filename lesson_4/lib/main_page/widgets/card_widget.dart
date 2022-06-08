@@ -9,27 +9,37 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        color: Colors.blueGrey[800],
-        child: Column(
-          children: [
-            Container(
-                width: 100,
-                height: 20,
-                decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                    width: 1.0,
-                    color: Colors.brown.shade200,
-                  )),
-                ),
-                child: Text('Title: $title',
-                    style: const TextStyle(color: Colors.white))),
-            SizedBox(
-                width: 100,
-                height: 70,
-                child: Text(body, style: const TextStyle(color: Colors.white)))
-          ],
-        ));
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Card(
+          color: Colors.grey[300],
+          child: Column(
+            children: [
+              Container(
+                  height: 20,
+                  child: Text('$title',
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500))),
+              const SizedBox(height: 8),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    border: Border(
+                        top: BorderSide(
+                      width: 1.0,
+                      color: Colors.brown.shade200,
+                    )),
+                  ),
+                  child:
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                        child: Text(body, style: const TextStyle(color: Colors.black)),
+                      ))
+            ],
+          )),
+    );
   }
 }
