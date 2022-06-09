@@ -5,9 +5,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:whe/main_page/widgets/card_widget.dart';
 import 'package:whe/main_page/widgets/google_account_widget.dart';
 
-import '../login_page/login_page.dart';
 import '../login_page/widgets/google_sign_widget.dart';
-import '../login_page/widgets/google_sign_widget.dart';
+
+final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -17,6 +17,8 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
+  GoogleSignInAccount? currentUser;
+
   void initFireBase() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
@@ -24,13 +26,28 @@ class MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    super.initState();
+    _googleSignIn.onCurrentUserChanged.listen((account) {
+      setState(() {
+        currentUser = account;
+      });
+    });
     initFireBase();
+    super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    var screenHeight = (MediaQuery.of(context).size.height);
+    GoogleSignInAccount? user = GoogleSignState.currentUser;
+    String? name='user';
+    if(user!=null)
+      {
+        name=user.displayName ?? '';
+      }
+    var screenHeight = (MediaQuery
+        .of(context)
+        .size
+        .height);
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.white,
@@ -42,64 +59,47 @@ class MainPageState extends State<MainPage> {
           body: SingleChildScrollView(
             child: Center(
                 child: Column(children: [
-              GoogleAccount(),
-              ElevatedButton(
-                  onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection('items')
-                        .add({'elements': 'element', 'titles': 'title'});
-                  },
-                  child: const Text("Add")),
-              StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('items')
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        FirebaseFirestore.instance
-                            .collection('items')
-                            .doc(snapshot
-                                .data!.docs[snapshot.data!.docs.length - 1].id)
-                            .delete();
-                      },
-                      child: const Text("Dell last"),
-                    );
-                  }),
-              Stack(
-                children: [
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('items')
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData) return const Text("No elements");
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (BuildContext context, index) {
-                            final elements =
+                  GoogleAccount(),
+                  Stack(
+                    children: [
+                      StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('items')
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData)
+                              return const Text("No elements");
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (BuildContext context, index) {
+                                final elements =
                                 snapshot.data!.docs[index].get('elements');
-                            final title =
+                                final name =
+                                snapshot.data!.docs[index].get('email');
+                                final title =
                                 snapshot.data!.docs[index].get('titles');
-                            return CardWidget(title: title, body: elements);
-                          },
-                        );
-                      }),
-                  WriteNoteWidget(),
-                ],
-              ),
-            ])),
+                                final indexNote = index;
+                                return CardWidget(title: title,
+                                    body: elements,
+                                    index: indexNote,userNote: name);
+                              },
+                            );
+                          }),
+                      WriteNoteWidget(nameNote:name),
+                    ],
+                  ),
+                ])),
           )),
     );
   }
 }
 
 class WriteNoteWidget extends StatefulWidget {
-  const WriteNoteWidget({Key? key}) : super(key: key);
+  final String nameNote;
+  const WriteNoteWidget({Key? key, required this.nameNote}) : super(key: key);
 
   @override
   State<WriteNoteWidget> createState() => _WriteNoteWidgetState();
@@ -108,7 +108,11 @@ class WriteNoteWidget extends StatefulWidget {
 class _WriteNoteWidgetState extends State<WriteNoteWidget> {
   @override
   Widget build(BuildContext context) {
-    var screenHeight = (MediaQuery.of(context).size.height);
+    String name= widget.nameNote;
+    var screenHeight = (MediaQuery
+        .of(context)
+        .size
+        .height);
     return Column(
       children: [
         SizedBox(height: getHeightIcon()),
@@ -125,7 +129,10 @@ class _WriteNoteWidgetState extends State<WriteNoteWidget> {
   }
 
   double getHeightIcon() {
-    var screenHeight = (MediaQuery.of(context).size.height);
+    var screenHeight = (MediaQuery
+        .of(context)
+        .size
+        .height);
     double height = GoogleSignState.currentUser == null
         ? screenHeight / 1.5
         : screenHeight / 1.7;
@@ -142,7 +149,7 @@ class _WriteNoteWidgetState extends State<WriteNoteWidget> {
         if (body != '') {
           FirebaseFirestore.instance
               .collection('items')
-              .add({'elements': body, 'titles': title});
+              .add({'elements': body, 'titles': title, 'email': widget.nameNote});
           Navigator.of(context).pop();
         }
       },
@@ -161,7 +168,7 @@ class _WriteNoteWidgetState extends State<WriteNoteWidget> {
           body = str;
         },
         decoration: InputDecoration(
-            // Added this
+          // Added this
             labelText: 'Body',
             enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(width: 2, color: Colors.grey),

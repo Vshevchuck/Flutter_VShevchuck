@@ -26,6 +26,7 @@ class GoogleAccountState extends State<GoogleAccount> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     GoogleSignInAccount? user = GoogleSignState.currentUser;
@@ -40,6 +41,7 @@ class GoogleAccountState extends State<GoogleAccount> {
         )
       ]);
     } else {
+
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Align(
