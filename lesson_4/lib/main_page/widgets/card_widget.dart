@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:whe/main_page/widgets/rewrite_note_widget.dart';
+
+import '../../utils/text_styles/Texts_styles.dart';
 
 class CardWidget extends StatelessWidget {
   final String title;
@@ -25,18 +26,15 @@ class CardWidget extends StatelessWidget {
           color: Colors.grey[300],
           child: Column(
             children: [
-              Container(
+              SizedBox(
                   height: 40,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text('$title',
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500)),
+                          child: Text(title,
+                              style: TextsStyles.titleTextStyle),
                         ),
                         Text(userNote),
                       ],
@@ -81,9 +79,6 @@ class CardWidget extends StatelessWidget {
                                         .collection('items')
                                         .doc(snapshot.data!.docs[index].id)
                                         .delete();
-                                    //FirebaseFirestore.instance
-                                    //.collection('items')
-                                    //.doc(snapshot.data!.docs[index].id).set({'elements': 'ss'});
                                   },
                                   icon: const Icon(Icons.remove_rounded));
                             })

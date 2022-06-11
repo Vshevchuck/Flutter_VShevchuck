@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../login_page/widgets/google_sign_widget.dart';
@@ -17,6 +15,7 @@ class GoogleAccount extends StatefulWidget {
 class GoogleAccountState extends State<GoogleAccount> {
   static GoogleSignInAccount? currentUser;
 
+  @override
   void initState() {
     _googleSignIn.onCurrentUserChanged.listen((account) {
       setState(() {

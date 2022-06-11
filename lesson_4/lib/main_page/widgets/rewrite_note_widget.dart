@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-import '../../login_page/widgets/google_sign_widget.dart';
 
 class ReWriteNoteWidget extends StatefulWidget {
   final String nameNote;
@@ -63,11 +60,10 @@ class _ReWriteNoteWidgetState extends State<ReWriteNoteWidget> {
         onChanged: (String str) {
           body = str;
         },
-        controller: TextEditingController(text: title),
+        controller: TextEditingController(text: body),
         decoration: InputDecoration(
             // Added this
             labelText: 'Body',
-            prefix: Text(widget.body),
             enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(width: 2, color: Colors.grey),
               borderRadius: BorderRadius.circular(15),

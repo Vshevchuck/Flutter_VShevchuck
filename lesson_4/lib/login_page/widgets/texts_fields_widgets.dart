@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whe/utils/text_styles/Texts_styles.dart';
 
 class TextFieldsWidget extends StatelessWidget {
   const TextFieldsWidget({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class TextFieldsWidget extends StatelessWidget {
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.0),
         child: TextField(
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
+            style: TextsStyles.loginTextStyle,
             decoration: InputDecoration(
                 hintStyle: TextStyle(color: Colors.white70),
                 hintText: 'Username',
@@ -28,7 +29,7 @@ class TextFieldsWidget extends StatelessWidget {
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.0),
         child: TextField(
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
+            style: TextsStyles.loginTextStyle,
             obscureText: true,
             decoration: InputDecoration(
                 hintStyle: TextStyle(color: Colors.white70),

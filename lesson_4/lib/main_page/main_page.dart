@@ -39,7 +39,6 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     GoogleSignInAccount? user = GoogleSignState.currentUser;
-    List<Widget> notes = <Widget>[];
     String? name = 'user';
     if (user != null) {
       name = user.displayName ?? '';
@@ -54,7 +53,7 @@ class MainPageState extends State<MainPage> {
           body: SingleChildScrollView(
             child: Center(
                 child: Column(children: [
-              GoogleAccount(),
+              const GoogleAccount(),
               Stack(
                 children: [
                   StreamBuilder(
@@ -63,7 +62,7 @@ class MainPageState extends State<MainPage> {
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData) return const Text("No elements");
+                        if (!snapshot.hasData) return const Center(child: Text("No elements"));
                         return ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,

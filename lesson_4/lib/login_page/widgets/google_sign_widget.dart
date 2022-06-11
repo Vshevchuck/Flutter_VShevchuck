@@ -41,25 +41,19 @@ class GoogleSignState extends State<GoogleSign> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(user.displayName ?? '',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18)),
+                    style: TextsStyles.displayNameTextStyle),
                 const SizedBox(
                   height: 5,
                 ),
                 Text(user.email,
-                    style: const TextStyle(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15)),
+                    style: TextsStyles.emailTextStyle),
               ],
             )
           ],
         ),
         const SizedBox(height: 10),
         const Text("Singed in successfully",
-            style: TextStyle(color: Colors.white, fontSize: 16)),
+            style: TextsStyles.signSuccessfullyTextStyle),
         ElevatedButton(
             onPressed: singOut,
             style: ElevatedButton.styleFrom(
@@ -74,7 +68,7 @@ class GoogleSignState extends State<GoogleSign> {
       return Column(
         children: [
           const Text('You are not singed in Google account',
-              style: TextStyle(color: Colors.white, fontSize: 16)),
+              style: TextsStyles.notSignedTextStyle),
           ElevatedButton(
               onPressed: singIn,
               style: ElevatedButton.styleFrom(
