@@ -62,27 +62,28 @@ class MainPageState extends State<MainPage> {
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData) return const Center(child: Text("No elements"));
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (BuildContext context, index) {
-                            final elements =
-                                snapshot.data!.docs[index].get('elements');
-                            final name =
-                                snapshot.data!.docs[index].get('email');
-                            final title =
-                                snapshot.data!.docs[index].get('titles');
-                            final indexNote = index;
-                            Widget card = CardWidget(
-                                title: title,
-                                body: elements,
-                                index: indexNote,
-                                userNote: name);
-                            return card;
-                          },
-                        );
+                        if (!snapshot.hasData) {
+                          return const Center(child: Text("No elements"));
+                        } else {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              final elements =
+                                  snapshot.data!.docs[index].get('elements');
+                              final name =
+                                  snapshot.data!.docs[index].get('email');
+                              final title =
+                                  snapshot.data!.docs[index].get('titles');
+                              final indexNote = index;
+                              return CardWidget(
+                                  title: title,
+                                  body: elements,
+                                  index: indexNote,
+                                  userNote: name);
+                            },
+                          );
+                        }
                       }),
                   WriteNoteWidget(nameNote: name),
                 ],

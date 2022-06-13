@@ -1,40 +1,28 @@
-name: whe
+name: weather_app
 description: A new Flutter project.
 
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
   sdk: ">=2.17.1 <3.0.0"
 
+
 dependencies:
-  cloud_firestore:
-  firebase_core:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  google_sign_in: ^5.2.1
-  json_annotation: ^4.0.1
-
-
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  build_runner:
-
-  json_serializable: ^6.2.0
-
-
   flutter_lints: ^2.0.0
-
 
 flutter:
 
   uses-material-design: true
 
-  assets:
-    - assets/weather_logo.jpg
-    - assets/background_logo.jpg
+
