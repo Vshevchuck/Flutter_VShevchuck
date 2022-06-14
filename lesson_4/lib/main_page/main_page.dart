@@ -45,51 +45,49 @@ class MainPageState extends State<MainPage> {
     }
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: const Text('Notes'),
-            backgroundColor: Colors.brown[200],
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text('Notes'),
+          backgroundColor: Colors.brown[200],
+        ),
+        body: Center(
+            child: Column(children: [
+          const GoogleAccount(),
+          Stack(
+            children: [
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('items')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: Text("No elements"));
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final elements =
+                              snapshot.data!.docs[index].get('elements');
+                          final name = snapshot.data!.docs[index].get('email');
+                          final title =
+                              snapshot.data!.docs[index].get('titles');
+                          final indexNote = index;
+                          return CardWidget(
+                              title: title,
+                              body: elements,
+                              index: indexNote,
+                              userNote: name);
+                        },
+                      );
+                    }
+                  }),
+             WriteNoteWidget(nameNote: name),
+            ],
           ),
-          body: SingleChildScrollView(
-            child: Center(
-                child: Column(children: [
-              const GoogleAccount(),
-              Stack(
-                children: [
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('items')
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(child: Text("No elements"));
-                        } else {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (context, index) {
-                              final elements =
-                                  snapshot.data!.docs[index].get('elements');
-                              final name =
-                                  snapshot.data!.docs[index].get('email');
-                              final title =
-                                  snapshot.data!.docs[index].get('titles');
-                              final indexNote = index;
-                              return CardWidget(
-                                  title: title,
-                                  body: elements,
-                                  index: indexNote,
-                                  userNote: name);
-                            },
-                          );
-                        }
-                      }),
-                  WriteNoteWidget(nameNote: name),
-                ],
-              ),
-            ])),
-          )),
+        ])),
+      ),
     );
   }
 }

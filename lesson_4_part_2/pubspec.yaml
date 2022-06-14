@@ -25,4 +25,7 @@ flutter:
 
   uses-material-design: true
 
+  assets:
+    - assets/image/morning_background.jpeg
+
 
