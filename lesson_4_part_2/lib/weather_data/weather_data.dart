@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 import '../domains/api_clients/api_client.dart';
 
@@ -34,4 +34,4 @@ class WeatherModelProvider extends InheritedNotifier {
         ?.widget;
     return widget is WeatherModelProvider ? widget : null;
   }
-}
+}*/
