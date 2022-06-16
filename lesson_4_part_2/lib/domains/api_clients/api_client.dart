@@ -14,11 +14,11 @@ class ApiClient {
   }
 
   Future<dynamic> get() async {
-    String city = "London";
+    String city = "kropyvnytskyi";
     final queryParameters = {
       'q': city,
       'appid': '7972250db8a62ce7a6a179038632b2c5',
-      'units' : 'imperial'
+      'units' : 'metric'
     };
     final uri = Uri.https(
         'api.openweathermap.org', '/data/2.5/forecast', queryParameters);
@@ -26,7 +26,7 @@ class ApiClient {
     final response = await request.close();
 
     final jsonStrings = await response.transform(utf8.decoder).toList();
-    //print(jsonStrings);
+    print(jsonStrings);
     //print('----------------------------------');
     final jsonString = jsonStrings.join();
     final dynamic json = jsonDecode(jsonString);
