@@ -27,5 +27,8 @@ flutter:
 
   assets:
     - assets/image/morning_background.jpeg
+    - assets/image/night_weather.jpg
+    - assets/image/tmorning_weather.jpg
+    - assets/image/day_weather.jpg
 
 

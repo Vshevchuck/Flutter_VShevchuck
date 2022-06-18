@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_app/domains/weather_model/weather_model.dart';
-import 'package:weather_app/pages/main_page/widgets/model_day_weather_widget.dart';
+import 'package:weather_app/pages/main_page/widgets/days_weather_widget.dart';
+import 'package:weather_app/pages/main_page/widgets/hours_weather_widget.dart';
+import 'package:weather_app/pages/main_page/widgets/model_hour_weather_widget.dart';
 import 'package:weather_app/util/images/images_data.dart';
 
 import '../../domains/api_clients/api_client.dart';
@@ -21,10 +22,14 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   List<String> items = ['Days', 'by the hour'];
   String? selectedItem;
+  bool nightTheme = true;
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = (MediaQuery.of(context).size.width);
+    var screenWidth = (MediaQuery
+        .of(context)
+        .size
+        .width);
     final apiClient = ApiClient();
     void reloadPost() async {
       var weather = await apiClient.getWeather();
@@ -39,9 +44,9 @@ class _MainPageState extends State<MainPage> {
     if (_weather != null) {
       return Scaffold(
         body: DecoratedBox(
-          decoration: const BoxDecoration(
+          decoration:  BoxDecoration(
             image: DecorationImage(
-                image: BackgroundImage.backgroundMorningImage,
+                image: setBackground(),
                 fit: BoxFit.cover),
           ),
           child: Column(
@@ -57,10 +62,10 @@ class _MainPageState extends State<MainPage> {
                         hintText: 'city',
                         enabledBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(width: 2.0, color: Colors.white)),
+                            BorderSide(width: 2.0, color: Colors.white)),
                         focusedBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(width: 1.0, color: Colors.white60)),
+                            BorderSide(width: 1.0, color: Colors.white60)),
                         isCollapsed: true,
                         contentPadding: EdgeInsets.only(top: 16.0),
                         prefixIcon: Icon(
@@ -68,19 +73,19 @@ class _MainPageState extends State<MainPage> {
                           color: Colors.white60,
                         ))),
               ),
-              const Text("Kropyvnytskyi",
+              Text("Kropyvnytskyi",
                   style: TextStyle(
-                      color: Colors.white70,
+                      color: nightTheme ? Colors.white70: Colors.black87,
                       fontSize: 35,
                       fontWeight: FontWeight.w300)),
               Text(' ${(_weather?.list![0].main?.temp?.toInt()).toString()}°',
-                  style: const TextStyle(
-                      color: Colors.white70,
+                  style: TextStyle(
+                      color: nightTheme ? Colors.white70: Colors.black87,
                       fontSize: 70,
                       fontWeight: FontWeight.w300)),
               Text((_weather?.list![0].weather![0].description).toString(),
-                  style: const TextStyle(
-                      color: Colors.white70,
+                  style: TextStyle(
+                      color: nightTheme ? Colors.white70: Colors.black87,
                       fontSize: 20,
                       fontWeight: FontWeight.w300)),
               const SizedBox(height: 250),
@@ -90,21 +95,24 @@ class _MainPageState extends State<MainPage> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: DropdownButtonFormField<String>(
-                     dropdownColor: Colors.black54,
+                        dropdownColor: Colors.black54,
                         iconEnabledColor: Colors.white,
                         iconDisabledColor: Colors.white,
                         value: selectedItem,
-                        hint: Text("Days / by the hour",style: TextStyle(
-                            fontSize: 17, color: Colors.white)),
+                        hint: const Text("Days / by the hour",
+                            style:
+                            TextStyle(fontSize: 17, color: Colors.white)),
                         items: items
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(item,
-                                      style: TextStyle(
-                                          fontSize: 17, color: Colors.white)),
-                                ))
+                            .map((item) =>
+                            DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item,
+                                  style: const TextStyle(
+                                      fontSize: 17, color: Colors.white)),
+                            ))
                             .toList(),
-                        onChanged: (item) => setState(() => selectedItem = item)),
+                        onChanged: (item) =>
+                            setState(() => selectedItem = item)),
                   ),
                 ),
               ),
@@ -118,17 +126,9 @@ class _MainPageState extends State<MainPage> {
                   ),
                   width: screenWidth,
                   child: Center(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          return index == 0
-                              ? ModelWeatherDayWidget(
-                                  weather: _weather!, index: (index))
-                              : ModelWeatherDayWidget(
-                                  weather: _weather!, index: (index) * 8);
-                        }),
+                    child: selectedItem == "by the hour"
+                        ? HoursWeatherWidget(weather: _weather!)
+                        : DaysWeatherWidget(weather: _weather!),
                   ),
                 ),
               ),
@@ -145,4 +145,29 @@ class _MainPageState extends State<MainPage> {
     double celsius = temp!;
     return (celsius - 32) * 5 ~/ 9;
   }
+
+  setBackground() {
+    if (ModelWeatherHourWidget.getOnlyHour(
+        _weather!.list![0].dtTxt.toString()) == "00:00:00" ||
+        ModelWeatherHourWidget.getOnlyHour(
+            _weather!.list![0].dtTxt.toString()) == "03:00:00") {
+      return BackgroundImage.backgroundNightImage;
+    }
+    if (ModelWeatherHourWidget.getOnlyHour(
+        _weather!.list![0].dtTxt.toString()) == "06:00:00" ||
+        ModelWeatherHourWidget.getOnlyHour(
+            _weather!.list![0].dtTxt.toString()) == "09:00:00") {
+      return BackgroundImage.backgroundMorningImage;
+    }
+    if (ModelWeatherHourWidget.getOnlyHour(
+        _weather!.list![0].dtTxt.toString()) == "18:00:00" ||
+        ModelWeatherHourWidget.getOnlyHour(_weather!.list![0].dtTxt.toString())=="21:00:00")
+    {
+      return BackgroundImage.backgroundEveningImage;
+    }
+    nightTheme=false;
+    return BackgroundImage.backgroundDayImage;
+  }
+
 }
+
