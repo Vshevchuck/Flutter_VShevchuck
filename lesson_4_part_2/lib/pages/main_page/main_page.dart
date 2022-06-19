@@ -20,19 +20,23 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  List<String> items = ['Days', 'by the hour'];
-  String? selectedItem;
-  bool nightTheme = true;
 
+  List<String> items = ['Days', 'By the hour'];
+  String? selectedItem;
+  double bottomTableSize=440;
+  bool nightTheme = true;
+  String city="Kropyvnytskyi";
   @override
   Widget build(BuildContext context) {
-    var screenWidth = (MediaQuery
-        .of(context)
-        .size
-        .width);
-    final apiClient = ApiClient();
+    ApiClient apiClient = ApiClient(city);
     void reloadPost() async {
       var weather = await apiClient.getWeather();
+      if(weather.message != null && weather.message == "city not found")
+        {
+          apiClient = ApiClient(city="London");
+          print('+');
+          weather = await apiClient.getWeather();
+        }
       setState(() => _weather = weather);
     }
 
@@ -53,27 +57,33 @@ class _MainPageState extends State<MainPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+               Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: TextField(
+                    onSubmitted: (text) {
+                      apiClient=ApiClient(text);
+                      city=text;
+                      reloadPost();
+                      print("+");
+                    },
                     style: TextStyles.cityFindTextStyle,
                     decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Colors.white70),
+                        hintStyle: TextStyle(color:  nightTheme ? Colors.white70: Colors.black87),
                         hintText: 'city',
                         enabledBorder: UnderlineInputBorder(
                             borderSide:
-                            BorderSide(width: 2.0, color: Colors.white)),
+                            BorderSide(width: 2.0, color: nightTheme ? Colors.white : Colors.black87)),
                         focusedBorder: UnderlineInputBorder(
                             borderSide:
-                            BorderSide(width: 1.0, color: Colors.white60)),
+                            BorderSide(width: 1.0, color:  nightTheme ? Colors.white60: Colors.black87)),
                         isCollapsed: true,
-                        contentPadding: EdgeInsets.only(top: 16.0),
+                        contentPadding: const EdgeInsets.only(top: 16.0),
                         prefixIcon: Icon(
                           Icons.location_city,
-                          color: Colors.white60,
+                          color:  nightTheme ? Colors.white70: Colors.black87,
                         ))),
               ),
-              Text("Kropyvnytskyi",
+              Text(city,
                   style: TextStyle(
                       color: nightTheme ? Colors.white70: Colors.black87,
                       fontSize: 35,
@@ -88,7 +98,8 @@ class _MainPageState extends State<MainPage> {
                       color: nightTheme ? Colors.white70: Colors.black87,
                       fontSize: 20,
                       fontWeight: FontWeight.w300)),
-              const SizedBox(height: 250),
+              Spacer(),
+              Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Container(
@@ -124,9 +135,8 @@ class _MainPageState extends State<MainPage> {
                     ),
                     color: Colors.black54,
                   ),
-                  width: screenWidth,
                   child: Center(
-                    child: selectedItem == "by the hour"
+                    child: selectedItem == "By the hour"
                         ? HoursWeatherWidget(weather: _weather!)
                         : DaysWeatherWidget(weather: _weather!),
                   ),
