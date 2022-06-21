@@ -1,17 +1,20 @@
-
 import 'package:flutter/material.dart';
 
 class ChangeHoursOrDaysWidget extends StatefulWidget {
   final Function setStateMainScreen;
-  const ChangeHoursOrDaysWidget({Key? key, required this.setStateMainScreen}) : super(key: key);
+
+  const ChangeHoursOrDaysWidget({Key? key, required this.setStateMainScreen})
+      : super(key: key);
 
   @override
-  State<ChangeHoursOrDaysWidget> createState() => ChangeHoursOrDaysWidgetState();
+  State<ChangeHoursOrDaysWidget> createState() =>
+      ChangeHoursOrDaysWidgetState();
 }
 
 class ChangeHoursOrDaysWidgetState extends State<ChangeHoursOrDaysWidget> {
   static List<String> items = ['Days', 'By the hour'];
   static String? selectedItem;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,11 +30,11 @@ class ChangeHoursOrDaysWidgetState extends State<ChangeHoursOrDaysWidget> {
                 style: TextStyle(fontSize: 17, color: Colors.white)),
             items: items
                 .map((item) => DropdownMenuItem<String>(
-              value: item,
-              child: Text(item,
-                  style: const TextStyle(
-                      fontSize: 17, color: Colors.white)),
-            ))
+                      value: item,
+                      child: Text(item,
+                          style: const TextStyle(
+                              fontSize: 17, color: Colors.white)),
+                    ))
                 .toList(),
             onChanged: (item) {
               setState(() => selectedItem = item);

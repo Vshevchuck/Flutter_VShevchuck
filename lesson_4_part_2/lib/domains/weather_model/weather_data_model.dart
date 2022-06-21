@@ -7,7 +7,6 @@ class WeatherData {
 
   WeatherData({this.cod, this.message, this.cnt, this.list, this.city});
 
-
   WeatherData.fromJson(Map<String, dynamic> json) {
     cod = json['cod'];
     message = json['message'];
@@ -19,11 +18,7 @@ class WeatherData {
       });
     }
     city = json['city'] != null ? City.fromJson(json['city']) : null;
-
   }
-
-
-
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -51,15 +46,14 @@ class WeatherList {
   Rain? rain;
 
   WeatherList(
-      {
-        this.main,
-        this.weather,
-        this.clouds,
-        this.wind,
-        this.visibility,
-        this.sys,
-        this.dtTxt,
-        this.rain});
+      {this.main,
+      this.weather,
+      this.clouds,
+      this.wind,
+      this.visibility,
+      this.sys,
+      this.dtTxt,
+      this.rain});
 
   WeatherList.fromJson(Map<String, dynamic> json) {
     main = json['main'] != null ? Main.fromJson(json['main']) : null;
@@ -69,8 +63,7 @@ class WeatherList {
         weather!.add(Weather.fromJson(v));
       });
     }
-    clouds =
-    json['clouds'] != null ? Clouds.fromJson(json['clouds']) : null;
+    clouds = json['clouds'] != null ? Clouds.fromJson(json['clouds']) : null;
     wind = json['wind'] != null ? Wind.fromJson(json['wind']) : null;
     visibility = json['visibility'];
     sys = json['sys'] != null ? Sys.fromJson(json['sys']) : null;
@@ -110,11 +103,7 @@ class Main {
   double? tempMin;
   double? tempMax;
 
-  Main(
-      {this.temp,
-        this.feelsLike,
-        this.tempMin,
-        this.tempMax});
+  Main({this.temp, this.feelsLike, this.tempMin, this.tempMax});
 
   Main.fromJson(Map<String, dynamic> json) {
     temp = json['temp'].toDouble();
@@ -238,13 +227,13 @@ class City {
 
   City(
       {this.id,
-        this.name,
-        this.coord,
-        this.country,
-        this.population,
-        this.timezone,
-        this.sunrise,
-        this.sunset});
+      this.name,
+      this.coord,
+      this.country,
+      this.population,
+      this.timezone,
+      this.sunrise,
+      this.sunset});
 
   City.fromJson(Map<String, dynamic> json) {
     id = json['id'];

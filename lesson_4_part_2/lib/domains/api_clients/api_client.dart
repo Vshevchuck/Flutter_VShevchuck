@@ -19,7 +19,7 @@ class ApiClient {
     final queryParameters = {
       'q': city,
       'appid': '7972250db8a62ce7a6a179038632b2c5',
-      'units' : 'metric'
+      'units': 'metric'
     };
     final uri = Uri.https(
         'api.openweathermap.org', '/data/2.5/forecast', queryParameters);

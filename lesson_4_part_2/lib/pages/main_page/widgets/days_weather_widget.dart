@@ -5,6 +5,7 @@ import 'model_day_weather_widget.dart';
 
 class DaysWeatherWidget extends StatelessWidget {
   final WeatherData weather;
+
   const DaysWeatherWidget({Key? key, required this.weather}) : super(key: key);
 
   @override
@@ -15,10 +16,8 @@ class DaysWeatherWidget extends StatelessWidget {
         itemCount: 5,
         itemBuilder: (context, index) {
           return index == 0
-              ? ModelWeatherDayWidget(
-              weather: weather, index: (index))
-              : ModelWeatherDayWidget(
-              weather: weather, index: (index) * 8);
+              ? ModelWeatherDayWidget(weather: weather, index: (index))
+              : ModelWeatherDayWidget(weather: weather, index: (index) * 8);
         });
   }
 }

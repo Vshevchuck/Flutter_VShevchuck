@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/domains/weather_model/weather_data_model.dart';
 import 'package:weather_app/pages/main_page/widgets/model_hour_weather_widget.dart';
 
-
 class HoursWeatherWidget extends StatelessWidget {
   final WeatherData weather;
 
@@ -22,7 +21,7 @@ class HoursWeatherWidget extends StatelessWidget {
   checkDayEnd() {
     for (int i = 0; i < 8; i++) {
       if (getOnlyHour(weather.list![i].dtTxt.toString()) == "00:00:00") {
-        return i+1;
+        return i + 1;
       }
     }
     return 8;

@@ -13,7 +13,8 @@ class ModelWeatherDayWidget extends StatelessWidget {
 
   Widget toDay() {
     if (index == 0) {
-      return const Text("Now", style: TextStyle(color: Colors.white, fontSize: 15));
+      return const Text("Now",
+          style: TextStyle(color: Colors.white, fontSize: 15));
     }
     return const SizedBox(height: 18);
   }
@@ -34,8 +35,8 @@ class ModelWeatherDayWidget extends StatelessWidget {
               'http://openweathermap.org/img/wn/${weather.list![index].weather![0].icon}.png'),
           Text(
             '${(weather.list![index].main?.temp?.toInt()).toString()}° / '
-            '${(ModelWeatherHourWidget.setTemperatureFromCelsiusToFahrenheit
-              (weather.list![index].main?.temp?.toInt())).toString()}F°',
+            '${(ModelWeatherHourWidget.
+            setTemperatureFromCelsiusToFahrenheit(weather.list![index].main?.temp?.toInt())).toString()}F°',
             style: const TextStyle(color: Colors.white, fontSize: 16),
           )
         ],
