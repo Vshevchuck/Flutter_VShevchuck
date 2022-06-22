@@ -25,7 +25,6 @@ class ApiClient {
         'api.openweathermap.org', '/data/2.5/forecast', queryParameters);
     final request = await client.getUrl(uri);
     final response = await request.close();
-
     final jsonStrings = await response.transform(utf8.decoder).toList();
     final jsonString = jsonStrings.join();
     final dynamic json = jsonDecode(jsonString);

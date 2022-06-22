@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/domains/weather_model/weather_data_model.dart';
 
+import '../../../util/text_styles/text_styles.dart';
+
 class ModelWeatherHourWidget extends StatelessWidget {
   final WeatherData weather;
   final int index;
@@ -12,7 +14,7 @@ class ModelWeatherHourWidget extends StatelessWidget {
   Widget toDay() {
     if (index == 0) {
       return const Text("Now",
-          style: TextStyle(color: Colors.white, fontSize: 15));
+          style: TextStyles.nowTextStyle);
     }
     return const SizedBox(height: 18);
   }
@@ -27,14 +29,14 @@ class ModelWeatherHourWidget extends StatelessWidget {
           toDay(),
           Text(
             getOnlyHour(weather.list![index].dtTxt.toString()),
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyles.hourTextStyle,
           ),
           Image.network(
               'http://openweathermap.org/img/wn/${weather.list![index].weather![0].icon}.png'),
           Text(
             '${(weather.list![index].main?.temp?.toInt()).toString()}° / '
                 '${(setTemperatureFromCelsiusToFahrenheit(weather.list![index].main?.temp?.toInt())).toString()}F°',
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyles.temperatureTextStyle,
           ),
         ],
       ),

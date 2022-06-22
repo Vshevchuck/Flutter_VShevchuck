@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../domains/weather_model/weather_data_model.dart';
+import '../../../util/colors/colors_style.dart';
 import 'change_hours_or_days_widget.dart';
 import 'days_weather_widget.dart';
 import 'hours_weather_widget.dart';
@@ -15,9 +16,9 @@ class TemperatureScale extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           border: Border(
-            top: BorderSide(width: 2.5, color: Colors.white),
+            top: BorderSide(width: 2.5, color: ColorStyle.borderSideColor),
           ),
-          color: Colors.black54,
+          color: ColorStyle.bottomContainerColor,
         ),
         child: Center(
           child: ChangeHoursOrDaysWidgetState.selectedItem == "By the hour"

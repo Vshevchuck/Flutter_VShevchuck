@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../util/text_styles/text_styles.dart';
 import '../main_page.dart';
 
 class WeatherInfoNow extends StatelessWidget {
@@ -11,27 +12,12 @@ class WeatherInfoNow extends StatelessWidget {
     return Column(
       children: [
         Text(city,
-            style: TextStyle(
-                color: MainPageState.nightTheme
-                    ? Colors.white70
-                    : Colors.black87,
-                fontSize: 35,
-                fontWeight: FontWeight.w300)),
+            style: TextStyles.cityTextStyle),
         Text(
             ' ${(weather?.list![0].main?.temp?.toInt()).toString()}°',
-            style: TextStyle(
-                color: MainPageState.nightTheme
-                    ? Colors.white70
-                    : Colors.black87,
-                fontSize: 70,
-                fontWeight: FontWeight.w300)),
+            style: TextStyles.mainTemperatureTextStyle),
         Text((weather?.list![0].weather![0].description).toString(),
-            style: TextStyle(
-                color: MainPageState.nightTheme
-                    ? Colors.white70
-                    : Colors.black87,
-                fontSize: 20,
-                fontWeight: FontWeight.w300)),
+            style: TextStyles.descriptionTextStyle),
       ],
     );
   }

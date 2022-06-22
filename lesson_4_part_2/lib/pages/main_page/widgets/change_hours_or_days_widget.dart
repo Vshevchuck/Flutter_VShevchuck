@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../util/colors/colors_style.dart';
+import '../../../util/text_styles/text_styles.dart';
+
 class ChangeHoursOrDaysWidget extends StatefulWidget {
   final Function setStateMainScreen;
 
@@ -22,18 +25,17 @@ class ChangeHoursOrDaysWidgetState extends State<ChangeHoursOrDaysWidget> {
       child: Align(
         alignment: Alignment.centerRight,
         child: DropdownButtonFormField<String>(
-            dropdownColor: Colors.black54,
-            iconEnabledColor: Colors.white,
-            iconDisabledColor: Colors.white,
+            dropdownColor: ColorStyle.dropDownColor,
+            iconEnabledColor:  ColorStyle.iconEnabledColor,
+            iconDisabledColor: ColorStyle.iconDisabledColor,
             value: selectedItem,
             hint: const Text("Days / by the hour",
-                style: TextStyle(fontSize: 17, color: Colors.white)),
+                style: TextStyles.dropdownButtonTitleTextStyle),
             items: items
                 .map((item) => DropdownMenuItem<String>(
                       value: item,
                       child: Text(item,
-                          style: const TextStyle(
-                              fontSize: 17, color: Colors.white)),
+                          style: TextStyles.dropdownButtonElementTextStyle ),
                     ))
                 .toList(),
             onChanged: (item) {
