@@ -43,41 +43,43 @@ class MainPageState extends State<MainPage> {
     }
 
     if (weather != null) {
-      return Scaffold(
-        body: DecoratedBox(
-          decoration: BoxDecoration(
-            image: DecorationImage(image: setBackground(), fit: BoxFit.cover),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                    onSubmitted: (text) {
-                      if (text != "") {
-                        apiClient = ApiClient(text);
-                        city = text;
-                        reloadWeather();
-                      }
-                    },
-                    style: TextStyles.cityFindTextStyle,
-                    decoration: TextFiledDecoration.textFieldDecoration),
-              ),
-              WeatherInfoNow(city: city),
-              const Spacer(flex: 2),
-              ChangeHoursOrDaysWidget(
-                  setStateMainScreen: () => setState(() {})),
-              TemperatureScale(
-                weatherData: weather!,
-              ),
-            ],
+      return SafeArea(
+        child: Scaffold(
+          body: DecoratedBox(
+            decoration: BoxDecoration(
+              image: DecorationImage(image: setBackground(), fit: BoxFit.cover),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                      onSubmitted: (text) {
+                        if (text != "") {
+                          apiClient = ApiClient(text);
+                          city = text;
+                          reloadWeather();
+                        }
+                      },
+                      style: TextStyles.cityFindTextStyle,
+                      decoration: TextFiledDecoration.textFieldDecoration),
+                ),
+                WeatherInfoNow(city: city),
+                const Spacer(flex: 2),
+                ChangeHoursOrDaysWidget(
+                    setStateMainScreen: () => setState(() {})),
+                TemperatureScale(
+                  weatherData: weather!,
+                ),
+              ],
+            ),
           ),
         ),
       );
     } else {
-      return const Scaffold(body: Center(child: Text('Wait weather data')));
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
   }
 

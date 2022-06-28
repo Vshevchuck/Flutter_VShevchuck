@@ -36,7 +36,7 @@ class _MainPageState extends State<MainPage> {
 
   downloading()async{
     final status = await Permission.storage.request();
-    Directory? directory;
+    //Directory? directory;
     if(status.isGranted)
       {
         final externalDir = await Directory('/storage/emulated/0/Download');
