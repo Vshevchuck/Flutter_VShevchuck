@@ -12,19 +12,25 @@ class TemperatureScale extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SingleChildScrollView(
       child: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(width: 2.5, color: ColorStyle.borderSideColor),
+        height: 130,
+          child: Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                top: BorderSide(width: 2.5, color: ColorStyle.borderSideColor),
+              ),
+              color: ColorStyle.bottomContainerColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top : 8.0),
+              child: Center(
+                child: ChangeHoursOrDaysWidgetState.selectedItem == "By the hour"
+                    ? HoursWeatherWidget(weather: weatherData)
+                    : DaysWeatherWidget(weather: weatherData),
+              ),
+            ),
           ),
-          color: ColorStyle.bottomContainerColor,
-        ),
-        child: Center(
-          child: ChangeHoursOrDaysWidgetState.selectedItem == "By the hour"
-              ? HoursWeatherWidget(weather: weatherData)
-              : DaysWeatherWidget(weather: weatherData),
-        ),
       ),
     );
   }
