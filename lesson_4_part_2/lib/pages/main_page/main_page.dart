@@ -11,7 +11,6 @@ import '../../util/text_field_decoration/text_field_decoration.dart';
 import '../../util/text_styles/text_styles.dart';
 
 WeatherData? weather;
-bool getWeather = false;
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -22,93 +21,95 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
   static bool nightTheme = true;
-  String city = "Kropyvnytskyi";
+  static String city = "Kropyvnytskyi";
+  ApiClient apiClient = ApiClient(city);
+
+  @override
+  initState() {
+    super.initState();
+    reloadWeather();
+  }
 
   @override
   Widget build(BuildContext context) {
-    ApiClient apiClient = ApiClient(city);
-    void reloadWeather() async {
-      var weatherAsync = await apiClient.getWeather();
-      if (weatherAsync.message != null &&
-          weatherAsync.message == "city not found") {
-        apiClient = ApiClient(city = "London");
-        weatherAsync = await apiClient.getWeather();
-      }
-      setState(() => weather = weatherAsync);
-    }
-
-    if (!getWeather) {
-      reloadWeather();
-      getWeather = true;
-    }
-
-    if (weather != null) {
-      return SafeArea(
-        child: Scaffold(
-          body: DecoratedBox(
-            decoration: BoxDecoration(
-              image: DecorationImage(image: setBackground(), fit: BoxFit.cover),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                      onSubmitted: (text) {
-                        if (text != "") {
-                          apiClient = ApiClient(text);
-                          city = text;
-                          reloadWeather();
-                        }
-                      },
-                      style: TextStyles.cityFindTextStyle,
-                      decoration: TextFiledDecoration.textFieldDecoration),
+    return SafeArea(
+      child: Scaffold(
+        body: weather != null
+            ? DecoratedBox(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: setBackground(), fit: BoxFit.cover),
                 ),
-                WeatherInfoNow(city: city),
-                const Spacer(flex: 2),
-                ChangeHoursOrDaysWidget(
-                    setStateMainScreen: () => setState(() {})),
-                TemperatureScale(
-                  weatherData: weather!,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                          onSubmitted: (text) {
+                            if (text != "") {
+                              apiClient = ApiClient(text);
+                              city = text;
+                              reloadWeather();
+                            }
+                          },
+                          style: TextStyles.cityFindTextStyle,
+                          decoration: TextFiledDecoration.textFieldDecoration),
+                    ),
+                    WeatherInfoNow(city: city),
+                    const Spacer(flex: 2),
+                    ChangeHoursOrDaysWidget(
+                        setStateMainScreen: () => setState(() {})),
+                    TemperatureScale(
+                      weatherData: weather!,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ),
-      );
-    } else {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
+      ),
+    );
   }
 
-  setBackground() {
+  AssetImage setBackground() {
     if (ModelWeatherHourWidget.getOnlyHour(
-                weather!.list![0].dtTxt.toString()) ==
+                weather!.list!.first.dtTxt.toString()) ==
             "00:00:00" ||
         ModelWeatherHourWidget.getOnlyHour(
-                weather!.list![0].dtTxt.toString()) ==
+                weather!.list!.first.dtTxt.toString()) ==
             "03:00:00") {
       return BackgroundImage.backgroundNightImage;
     }
     if (ModelWeatherHourWidget.getOnlyHour(
-                weather!.list![0].dtTxt.toString()) ==
+                weather!.list!.first.dtTxt.toString()) ==
             "06:00:00" ||
         ModelWeatherHourWidget.getOnlyHour(
-                weather!.list![0].dtTxt.toString()) ==
+                weather!.list!.first.dtTxt.toString()) ==
             "09:00:00") {
       return BackgroundImage.backgroundMorningImage;
     }
     if (ModelWeatherHourWidget.getOnlyHour(
-                weather!.list![0].dtTxt.toString()) ==
+                weather!.list!.first.dtTxt.toString()) ==
             "18:00:00" ||
         ModelWeatherHourWidget.getOnlyHour(
-                weather!.list![0].dtTxt.toString()) ==
+                weather!.list!.first.dtTxt.toString()) ==
             "21:00:00") {
       return BackgroundImage.backgroundEveningImage;
     }
     nightTheme = false;
     return BackgroundImage.backgroundDayImage;
+  }
+
+  Future<void> reloadWeather() async {
+    var weatherAsync = await apiClient.getWeather();
+    if (weatherAsync.message != null &&
+        weatherAsync.message == "city not found") {
+      apiClient = ApiClient(city = "London");
+      weatherAsync = await apiClient.getWeather();
+    }
+    setState(() => weather = weatherAsync);
   }
 }

@@ -13,8 +13,7 @@ class ModelWeatherHourWidget extends StatelessWidget {
 
   Widget toDay() {
     if (index == 0) {
-      return const Text("Now",
-          style: TextStyles.nowTextStyle);
+      return const Text("Now", style: TextStyles.nowTextStyle);
     }
     return const SizedBox(height: 18);
   }
@@ -32,10 +31,10 @@ class ModelWeatherHourWidget extends StatelessWidget {
             style: TextStyles.hourTextStyle,
           ),
           Image.network(
-              'http://openweathermap.org/img/wn/${weather.list![index].weather![0].icon}.png'),
+              'http://openweathermap.org/img/wn/${weather.list![index].weather!.first.icon}.png'),
           Text(
             '${(weather.list![index].main?.temp?.toInt()).toString()}° / '
-                '${(setTemperatureFromCelsiusToFahrenheit(weather.list![index].main?.temp?.toInt())).toString()}F°',
+            '${(setTemperatureFromCelsiusToFahrenheit(weather.list![index].main?.temp?.toInt())).toString()}F°',
             style: TextStyles.temperatureTextStyle,
           ),
         ],
@@ -43,11 +42,11 @@ class ModelWeatherHourWidget extends StatelessWidget {
     );
   }
 
-  static setTemperatureFromCelsiusToFahrenheit(int? temp) {
+  static int setTemperatureFromCelsiusToFahrenheit(int? temp) {
     return (temp! * 1.8 + 32).toInt();
   }
 
-  static getOnlyHour(String string) {
-    return string.split(' ')[1];
+  static String getOnlyHour(String str) {
+    return str.split(' ')[1];
   }
 }

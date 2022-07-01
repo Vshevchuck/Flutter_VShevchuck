@@ -14,9 +14,9 @@ class WeatherInfoNow extends StatelessWidget {
         Text(city,
             style: TextStyles.cityTextStyle),
         Text(
-            ' ${(weather?.list![0].main?.temp?.toInt()).toString()}°',
+            ' ${(weather?.list!.first.main?.temp?.toInt()).toString()}°',
             style: TextStyles.mainTemperatureTextStyle),
-        Text((weather?.list![0].weather![0].description).toString(),
+        Text((weather?.list!.first.weather!.first.description).toString(),
             style: TextStyles.descriptionTextStyle),
       ],
     );

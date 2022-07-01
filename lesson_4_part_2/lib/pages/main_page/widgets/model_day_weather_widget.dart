@@ -45,8 +45,8 @@ class ModelWeatherDayWidget extends StatelessWidget {
     );
   }
 
-  getOnlyDate(String string) {
-    string = string.split(' ')[0];
-    return '${string.split('-')[1]} . ${string.split('-')[2]}';
+  String getOnlyDate(String str) {
+    str = str.split(' ')[0];
+    return '${str.split('-')[1]} . ${str.split('-')[2]}';
   }
 }

@@ -13,7 +13,7 @@ class TemperatureScale extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
         height: 130,
           child: Container(
             decoration: const BoxDecoration(

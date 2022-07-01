@@ -18,7 +18,7 @@ class HoursWeatherWidget extends StatelessWidget {
         });
   }
 
-  checkDayEnd() {
+  int checkDayEnd() {
     for (int i = 0; i < 8; i++) {
       if (getOnlyHour(weather.list![i].dtTxt.toString()) == "00:00:00") {
         return i + 1;
@@ -27,7 +27,7 @@ class HoursWeatherWidget extends StatelessWidget {
     return 8;
   }
 
-  getOnlyHour(String string) {
-    return string.split(' ')[1];
+  String getOnlyHour(String str) {
+    return str.split(' ')[1];
   }
 }
