@@ -18,7 +18,7 @@ class _MainPageState extends State<MainPage> {
         child: Scaffold(
             appBar: AppBar(
                 title: Row(
-                  children: [Text('MainPage ${dataUser.email}'), ElevatedButton(onPressed: () {
+                  children: [Text('${dataUser.email}'), ElevatedButton(onPressed: () {
                     Navigator.pushReplacementNamed(context, '/login',arguments: true);
                   }, child: Text('Log out'))
                   ],

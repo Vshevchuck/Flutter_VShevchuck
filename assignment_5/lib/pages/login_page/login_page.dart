@@ -21,7 +21,7 @@ class MainPageState extends State<LoginPage> {
       if(checkLogOut != null)
       {
         logOut();
-        checkLogOut==null;
+        checkLogOut=null;
       }
     super.didChangeDependencies();
   }
@@ -52,11 +52,8 @@ class MainPageState extends State<LoginPage> {
                   child: const Text('Sign In'),
                 ),
                 ElevatedButton(
-                    onPressed: () async {
-                      await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                              email: emailController.text,
-                              password: passwordController.text);
+                    onPressed: ()  {
+                      Navigator.of(context).pushReplacementNamed('/register');
                       setState(() {});
                     },
                     child: const Text('Sign Up')),
