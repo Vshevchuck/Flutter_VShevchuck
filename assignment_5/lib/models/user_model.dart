@@ -6,3 +6,9 @@ class UserRegister{
   final String password;
   UserRegister(this.name, this.email,this.password);
 }
+
+class UserLogin{
+  final String email;
+  final String password;
+  UserLogin(this.email,this.password);
+}

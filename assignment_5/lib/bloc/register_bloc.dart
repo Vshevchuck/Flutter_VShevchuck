@@ -1,4 +1,3 @@
-import 'package:assignment_5/bloc/register_event.dart';
 import 'package:assignment_5/bloc/register_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +18,8 @@ class RegisterBloc extends Bloc<UserRegister, RegisterState> {
       User? user = FirebaseAuth.instance.currentUser;
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: userRegister.email, password: userRegister.password);
+            email: event.email, password: event.password);
         user = FirebaseAuth.instance.currentUser;
-        print(user);
         yield UserRegisteredState(user!);
       } catch (_) {}
     }
