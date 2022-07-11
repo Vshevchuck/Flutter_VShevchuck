@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,6 +44,7 @@ class MainPageState extends State<MainPage> {
     if (user != null) {
       name = user.displayName ?? '';
     }
+    mm();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -52,42 +54,49 @@ class MainPageState extends State<MainPage> {
         ),
         body: Center(
             child: Column(children: [
-          const GoogleAccount(),
-          Stack(
-            children: [
-              StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('items')
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(child: Text("No elements"));
-                    } else {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          final elements =
+              const GoogleAccount(),
+              Stack(
+                children: [
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('items')
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(child: Text("No elements"));
+                        } else {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              print(snapshot.data!.docs[0].data() as Map<String,dynamic>);
+                              final elements =
                               snapshot.data!.docs[index].get('elements');
-                          final name = snapshot.data!.docs[index].get('email');
-                          final title =
+                              final name = snapshot.data!.docs[index].get(
+                                  'email');
+                              final title =
                               snapshot.data!.docs[index].get('titles');
-                          final indexNote = index;
-                          return CardWidget(
-                              title: title,
-                              body: elements,
-                              index: indexNote,
-                              userNote: name);
-                        },
-                      );
-                    }
-                  }),
-             WriteNoteWidget(nameNote: name),
-            ],
-          ),
-        ])),
+                              final indexNote = index;
+                              return CardWidget(
+                                  title: title,
+                                  body: elements,
+                                  index: indexNote,
+                                  userNote: name);
+                            },
+                          );
+                        }
+                      }),
+                  WriteNoteWidget(nameNote: name),
+                ],
+              ),
+            ])),
       ),
     );
+  }
+
+  void mm() async {
+    print(FirebaseFirestore.instance.collection('items').doc(
+        'WIx2deIIbiwasVXmMffo'));
   }
 }

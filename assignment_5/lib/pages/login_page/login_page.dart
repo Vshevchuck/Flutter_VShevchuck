@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/login_block.dart';
+import '../../bloc/login_bloc.dart';
 import '../../bloc/login_state.dart';
 import '../../models/user_model.dart';
 
@@ -75,7 +75,8 @@ class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+    return BlocBuilder<LoginBloc, LoginState>(
+        builder: (context, state) {
       if (state is UserLoginedState) {
         Future.delayed(Duration.zero, () {
           Navigator.of(context)

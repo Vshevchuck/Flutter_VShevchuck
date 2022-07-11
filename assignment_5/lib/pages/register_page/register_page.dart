@@ -83,11 +83,9 @@ class Button extends StatelessWidget {
                   RegisterPageState.emailController.text,
                   RegisterPageState.passwordController.text);
               registerBloc.add(userModel);
-              //await FirebaseAuth.instance
-              //.createUserWithEmailAndPassword(
-              //email: emailController.text,
-              //password: passwordController.text);
-              //user = FirebaseAuth.instance.currentUser;
+              RegisterPageState.emailController.text="";
+              RegisterPageState.passwordController.text="";
+              RegisterPageState.nameController.text="";
             },
             child: Text('Register'));
       },
