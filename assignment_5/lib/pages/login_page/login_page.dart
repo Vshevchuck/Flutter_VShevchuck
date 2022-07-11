@@ -25,10 +25,7 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   void didChangeDependencies() {
-    Object? checkLogOut = ModalRoute
-        .of(context)
-        ?.settings
-        .arguments;
+    Object? checkLogOut = ModalRoute.of(context)?.settings.arguments;
     if (checkLogOut != null) {
       logOut();
       checkLogOut = null;
@@ -38,46 +35,31 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
     return BlocProvider<LoginBloc>(
-        create: (context) => LoginBloc(),
-        child: SafeArea(
-          child: Scaffold(
-            appBar: AppBar(
-                title: Text(
-                    'Auth User (Logged ${user == null ? 'out' : '${user
-                        .email}'})')),
-            body: Column(
-              children: [
-                TextField(controller: emailController),
-                TextField(controller: passwordController),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SignInButton(),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacementNamed(
-                              '/register');
-                          setState(() {});
-                        },
-                        child: const Text('Sign Up')),
-                    ElevatedButton(
-                        onPressed: () async {
-                          await FirebaseAuth.instance.signOut();
-                          setState(() {});
-                        },
-                        child: const Text('Sign Out')),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('get id'),
-                    ),
-                  ],
-                )
-              ],
-            ),
+      create: (context) => LoginBloc(),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(title: const Text('Authorization')),
+          body: Column(
+            children: [
+              TextField(controller: emailController),
+              TextField(controller: passwordController),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SignInButton(),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacementNamed('/register');
+                        setState(() {});
+                      },
+                      child: const Text('Sign Up')),
+                ],
+              )
+            ],
           ),
         ),
+      ),
     );
   }
 
@@ -93,24 +75,23 @@ class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-    return BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
-          if (state is UserLoginedState) {
-            Future.delayed(Duration.zero, () {
-              Navigator.of(context)
-                  .pushReplacementNamed('/main', arguments: state.user);
-            });
-          }
-          return ElevatedButton(
-            onPressed: () async {
-              UserLogin userModel = UserLogin(
-                  LoginPageState.emailController.text,
-                  LoginPageState.passwordController.text);
-              loginBloc.add(userModel);
-            },
-            child: const Text('Sign In'),
-          );
-        }
-    );
+    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+      if (state is UserLoginedState) {
+        Future.delayed(Duration.zero, () {
+          Navigator.of(context)
+              .pushReplacementNamed('/main', arguments: state.user);
+        });
+      }
+      return ElevatedButton(
+        onPressed: () async {
+          UserLogin userModel = UserLogin(LoginPageState.emailController.text,
+              LoginPageState.passwordController.text);
+          loginBloc.add(userModel);
+          LoginPageState.emailController.text="";
+          LoginPageState.passwordController.text="";
+        },
+        child: const Text('Sign In'),
+      );
+    });
   }
 }

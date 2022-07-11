@@ -18,6 +18,7 @@ dependencies:
   flutter_bloc: ^4.0.1
 
 dev_dependencies:
+  cloud_firestore:
   flutter_test:
     sdk: flutter
 
