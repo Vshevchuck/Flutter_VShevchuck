@@ -24,7 +24,7 @@ class RegisterBloc extends Bloc<UserRegister, RegisterState> {
         if(user!=null)
           {
             FirebaseFirestore.instance.collection('users').add(
-                {'email': user.email, 'name': event.name, 'id': user.uid});
+                {'email': user.email, 'name': event.name, 'id': user.uid,'chatrooms': <String,String>{}});
           }
 
         yield UserRegisteredState(user!);

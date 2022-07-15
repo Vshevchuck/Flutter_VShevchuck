@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:assignment_5/bloc/user_provider.dart';
+import 'package:assignment_5/pages/chat_room/chat_room.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,27 +38,30 @@ class _MainPageState extends State<MainPage> {
                 child: Text('Log out'))
           ],
         )),
-        body: CardWidget(),
+        body: CardWidget(
+          dataUser: dataUser,
+        ),
         //body: StreamBuilder(
-            //stream: FirebaseFirestore.instance.collection('users').snapshots(),
-            //builder:
-               // (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              //if (!snapshot.hasData) {
-                //return const Center(child: Text("No elements"));
-              //} else {
-                //userBloc.add(snapshot.data!.docs);
-                //print(snapshot.data!.docs.toList());
-              //}
-            //}
-            //),
+        //stream: FirebaseFirestore.instance.collection('users').snapshots(),
+        //builder:
+        // (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        //if (!snapshot.hasData) {
+        //return const Center(child: Text("No elements"));
+        //} else {
+        //userBloc.add(snapshot.data!.docs);
+        //print(snapshot.data!.docs.toList());
+        //}
+        //}
+        //),
       )),
     );
   }
 }
 
 class CardWidget extends StatelessWidget {
+  final User dataUser;
 
-  const CardWidget({Key? key}) : super(key: key);
+  const CardWidget({Key? key, required this.dataUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,23 +78,27 @@ class CardWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                   child: ListTile(
+                onTap: () {
+                  Navigator.of(context).pushReplacementNamed('/chatroom',
+                      arguments: [state.loadedUsers[index], dataUser]);
+                },
                 leading: Container(
                     height: 50,
                     width: 50,
-                    child: Center(
-                        child: Text(
-                      state.loadedUsers[index].name[0],
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18),
-                    )),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(90),
                       color:
                           Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0)
                               .withOpacity(1.0),
-                    )),
+                    ),
+                    child: Center(
+                        child: Text(
+                      state.loadedUsers[index].name[0],
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18),
+                    ))),
                 title: Column(
                   children: [
                     Text(
@@ -106,7 +114,7 @@ class CardWidget extends StatelessWidget {
           },
         );
       }
-      return CircularProgressIndicator();
+      return const Center(child: CircularProgressIndicator());
     });
   }
 }

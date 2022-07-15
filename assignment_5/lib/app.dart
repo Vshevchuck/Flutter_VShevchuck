@@ -1,3 +1,4 @@
+import 'package:assignment_5/pages/chat_room/chat_room.dart';
 import 'package:assignment_5/pages/login_page/login_page.dart';
 import 'package:assignment_5/pages/main_page/main_page.dart';
 import 'package:assignment_5/pages/register_page/register_page.dart';
@@ -12,7 +13,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       routes: {'/main' :(context,{arguments})=>MainPage(),
       '/register' : (context) => RegisterPage(),
-      '/login' : (context,{arguments}) => LoginPage()},
+      '/login' : (context,{arguments}) => LoginPage(),
+      '/chatroom':(context,{arguments}) =>ChatRoom()},
       initialRoute: '/login',
     );
   }
