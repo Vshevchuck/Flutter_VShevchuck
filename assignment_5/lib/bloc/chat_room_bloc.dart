@@ -9,15 +9,41 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
 
   @override
   Stream<ChatRoomState> mapEventToState(dynamic event) async* {
-    print(event.runtimeType);
     if (event.runtimeType == List<String>) {
+      print('+');
       FirebaseFirestore.instance.collection('chatrooms').add({
-        'id_first_user': event[1],
-        'id_second_user': event[0],
-        'id': '${event[1]}-${event[0]}'
+        'id_first_user': event[0],
+        'id_second_user': event[1],
+        'id': '${event[0]}-${event[1]}',
+        'chat': <Map<String, String>>[]
       });
-    }
-    if (event.runtimeType == List<Object>) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .snapshots()
+          .listen((snapshot) {
+        for (int i = snapshot.docs.length - 1; i >= 0; i--) {
+          if (snapshot.docs[i].get('id') == event[0]) {
+            Map<String, dynamic> chatrooms =
+                snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
+            chatrooms.addAll({'${event[0]}-${event[1]}': event[1]});
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(snapshot.docs[i].id)
+                .set({'chatrooms': chatrooms}, SetOptions(merge: true));
+          }
+          if (snapshot.docs[i].get('id') == event[1]) {
+            Map<String, dynamic> chatrooms =
+                snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
+            chatrooms.addAll({'${event[0]}-${event[1]}': event[0]});
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(snapshot.docs[i].id)
+                .set({'chatrooms': chatrooms}, SetOptions(merge: true));
+          }
+        }
+      });
+      yield ChatRoomIdState('${event[0]}-${event[1]}');
+    } else if (event.runtimeType == List<Object>) {
       FirebaseFirestore.instance
           .collection('users')
           .snapshots()
@@ -31,7 +57,7 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
     } else if (event != null) {
       if (event.isEmpty) {
         yield ChatRoomNewState();
-      } else {
+      } else if (event.runtimeType == String) {
         for (var item in event.entries) {
           if (item.value == event[0].uid) {
             yield ChatRoomIdState(item.key);

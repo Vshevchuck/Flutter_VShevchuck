@@ -34,11 +34,25 @@ class CheckChatRoom extends StatelessWidget {
       if (state is ChatRoomNewState) {
         return ElevatedButton(
             onPressed: () {
-              userBloc.add([users[1].uid, users[0].id] as List<String>);
+              userBloc.add([users[1].uid.toString(), users[0].id.toString()]);
             },
             child: const Text('Create dialog'));
       }
+      if(state is ChatRoomIdState)
+        {
+          return Chat(id:state.chatRoomId);
+        }
       return Text('dasda');
     });
   }
 }
+class Chat extends StatelessWidget {
+  final id;
+  const Chat({Key? key,required this.id}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
