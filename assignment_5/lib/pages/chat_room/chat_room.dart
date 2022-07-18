@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/chat_bloc.dart';
 import '../../bloc/chat_room_bloc.dart';
 import '../../bloc/chat_room_state.dart';
+import '../../bloc/chat_state.dart';
 import '../../bloc/register_state.dart';
 
 class ChatRoom extends StatelessWidget {
@@ -10,7 +12,10 @@ class ChatRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final users = (ModalRoute.of(context)?.settings.arguments) as List<dynamic>;
+    final users = (ModalRoute
+        .of(context)
+        ?.settings
+        .arguments) as List<dynamic>;
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(title: Text(users[0].email)),
@@ -38,21 +43,45 @@ class CheckChatRoom extends StatelessWidget {
             },
             child: const Text('Create dialog'));
       }
-      if(state is ChatRoomIdState)
-        {
-          return Chat(id:state.chatRoomId);
-        }
-      return Text('dasda');
+      if (state is ChatRoomIdState) {
+        return Chat(id: state.chatRoomId);
+      }
+      return const Center(child: CircularProgressIndicator());
     });
   }
 }
+
 class Chat extends StatelessWidget {
   final id;
-  const Chat({Key? key,required this.id}) : super(key: key);
+
+  const Chat({Key? key, required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return BlocProvider<ChatBloc>(
+        create: (context) => ChatBloc(),
+        child: Container());
   }
 }
+
+class ChatGetListWidget extends StatelessWidget {
+  const ChatGetListWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ChatBloc, ChatState>(builder: (context, state)
+    {
+      if (state is ChatListState) {
+        return ListView.builder
+          (shrinkWrap: true,
+            itemCount: state.chat.length,
+            itemBuilder: (context, index) {
+            return Container();
+            });
+       }
+        return const Center(child: CircularProgressIndicator());
+      });
+    }
+  }
+
 

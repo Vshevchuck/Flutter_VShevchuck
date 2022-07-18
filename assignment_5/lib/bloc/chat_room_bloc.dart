@@ -9,6 +9,7 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
 
   @override
   Stream<ChatRoomState> mapEventToState(dynamic event) async* {
+    bool newRoom = true;
     if (event.runtimeType == List<String>) {
       print('+');
       FirebaseFirestore.instance.collection('chatrooms').add({
@@ -50,18 +51,22 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
           .listen((snapshot) {
         for (int i = 0; i < snapshot.docs.length; i++) {
           if (snapshot.docs[i].get('id') == event[1].uid) {
-            add(snapshot.docs[i].get('chatrooms'));
+            add([snapshot.docs[i].get('chatrooms'), event[0].id]);
           }
         }
       });
     } else if (event != null) {
       if (event.isEmpty) {
         yield ChatRoomNewState();
-      } else if (event.runtimeType == String) {
-        for (var item in event.entries) {
-          if (item.value == event[0].uid) {
+      } else {
+        for (var item in event[0].entries) {
+          if (item.value == event[1]) {
+            newRoom = false;
             yield ChatRoomIdState(item.key);
           }
+        }
+        if (newRoom) {
+          yield ChatRoomNewState();
         }
       }
     }
