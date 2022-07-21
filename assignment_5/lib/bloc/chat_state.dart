@@ -4,6 +4,6 @@ class ChatEmptyState extends ChatState{}
 class ChatErrorState extends ChatState{}
 
 class ChatListState extends ChatState{
-  final List<Map<String,String>> chat;
+  final List<dynamic> chat;
   ChatListState(this.chat);
 }

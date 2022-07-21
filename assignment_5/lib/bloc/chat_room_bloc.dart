@@ -10,13 +10,24 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
   @override
   Stream<ChatRoomState> mapEventToState(dynamic event) async* {
     bool newRoom = true;
+    String id = '';
     if (event.runtimeType == List<String>) {
       print('+');
       FirebaseFirestore.instance.collection('chatrooms').add({
         'id_first_user': event[0],
         'id_second_user': event[1],
         'id': '${event[0]}-${event[1]}',
-        'chat': <Map<String, String>>[]
+        'chat': [{'admin':'you start message with new user'}]
+      });
+      FirebaseFirestore.instance
+          .collection('chatrooms')
+          .snapshots()
+          .listen((snapshot) {
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          if (snapshot.docs[i].get('id') == '${event[0]}-${event[1]}') {
+            id = snapshot.docs[i].id;
+          }
+        }
       });
       FirebaseFirestore.instance
           .collection('users')
@@ -26,7 +37,7 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
           if (snapshot.docs[i].get('id') == event[0]) {
             Map<String, dynamic> chatrooms =
                 snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
-            chatrooms.addAll({'${event[0]}-${event[1]}': event[1]});
+            chatrooms.addAll({id: event[1]});
             FirebaseFirestore.instance
                 .collection('users')
                 .doc(snapshot.docs[i].id)
@@ -35,7 +46,7 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
           if (snapshot.docs[i].get('id') == event[1]) {
             Map<String, dynamic> chatrooms =
                 snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
-            chatrooms.addAll({'${event[0]}-${event[1]}': event[0]});
+            chatrooms.addAll({id: event[0]});
             FirebaseFirestore.instance
                 .collection('users')
                 .doc(snapshot.docs[i].id)
@@ -43,7 +54,8 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
           }
         }
       });
-      yield ChatRoomIdState('${event[0]}-${event[1]}');
+      print(id);
+      yield ChatRoomIdState(id);
     } else if (event.runtimeType == List<Object>) {
       FirebaseFirestore.instance
           .collection('users')
