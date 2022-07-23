@@ -9,6 +9,7 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
 
   @override
   Stream<ChatRoomState> mapEventToState(dynamic event) async* {
+    List<Map<String,String>> chat=[{'admin':'start the dialog'}];
     bool newRoom = true;
     String id = '';
     if (event.runtimeType == List<String>) {
@@ -17,7 +18,7 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
         'id_first_user': event[0],
         'id_second_user': event[1],
         'id': '${event[0]}-${event[1]}',
-        'chat': [{'admin':'you start message with new user'}]
+        'chat': chat
       });
       FirebaseFirestore.instance
           .collection('chatrooms')

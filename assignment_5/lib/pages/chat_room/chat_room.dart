@@ -70,7 +70,7 @@ class ChatGetListWidget extends StatelessWidget {
   final id;
   final userId;
 
-  const ChatGetListWidget({Key? key, required this.id, required this.userId})
+  ChatGetListWidget({Key? key, required this.id, required this.userId})
       : super(key: key);
 
   @override
@@ -82,28 +82,55 @@ class ChatGetListWidget extends StatelessWidget {
       if (state is ChatListState) {
         return Column(
           children: [
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: state.chat.length,
-                itemBuilder: (context, index) {
-                  String message = 'message';
-                  try{
-                    if(state.chat[index][userId]!=null)
-                      {
-                        message= state.chat[index][userId];
-                      }
-                  }
-                  catch(_){
-                    message='message';
-                  }
-                  return Text(message);
-                }),
+            Expanded(
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: state.chat.length,
+                  itemBuilder: (context, index) {
+                    String message = 'message';
+                    String auth = 'auth';
+                    var messageAuth = state.chat[index] as Map<String, dynamic>;
+                    for (var item in messageAuth.entries) {
+                      message = item.value;
+                      auth = item.key;
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Align(
+                        alignment: auth == userId
+                            ? Alignment.topRight
+                            : Alignment.topLeft,
+                        child: FittedBox(
+                            clipBehavior: Clip.hardEdge,
+                          child: Container(
+                              alignment: auth == userId
+                                  ? Alignment.topRight
+                                  : Alignment.topLeft,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: auth == userId ? Colors.blue : Colors.grey,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(constraints: BoxConstraints(maxWidth:250),
+                                    child: Text(softWrap:true,message, style: _style)),
+                              )),
+                        ),
+                      ),
+                    );
+                  }),
+            ),
             Row(
               children: [
-                Container(width:200,child: TextField(controller: messageController)),
+                Expanded(child: TextField(controller: messageController)),
                 IconButton(
                     onPressed: () {
-                      chatBloc.add([id,{userId: messageController.text}]);
+                      chatBloc.add([
+                        id,
+                        {userId: messageController.text}
+                      ]);
+                      messageController.text="";
                     },
                     icon: Icon(Icons.send))
               ],
@@ -114,4 +141,8 @@ class ChatGetListWidget extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     });
   }
+
+  final TextStyle _style = TextStyle(color: Colors.white, fontSize: 15);
+
+
 }

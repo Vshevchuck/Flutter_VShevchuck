@@ -16,7 +16,7 @@ class ChatBloc extends Bloc<dynamic, ChatState> {
           .collection('chatrooms')
           .doc(event)
           .get();
-      print(document.data()?['chat'][0]['admin']);
+      print(document.data()?['chat'][0] as Map<String,dynamic>);
       add(document.data()?['chat']);
 
       //FirebaseFirestore.instance
