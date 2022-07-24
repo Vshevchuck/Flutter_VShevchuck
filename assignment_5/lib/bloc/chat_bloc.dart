@@ -11,21 +11,13 @@ class ChatBloc extends Bloc<dynamic, ChatState> {
   Stream<ChatState> mapEventToState(dynamic event) async* {
     bool sendList=false;
     if (event.runtimeType == String) {
-      print(event);
-      var document = await FirebaseFirestore.instance
-          .collection('chatrooms')
-          .doc(event)
-          .get();
-      print(document.data()?['chat'][0] as Map<String,dynamic>);
-      add(document.data()?['chat']);
-
-      //FirebaseFirestore.instance
-      //.collection('chatrooms')
-      //.doc(event)
-      //.snapshots()
-      //.listen((snapshot) {
-      //add(snapshot.data()!['chat'] as List<Map<String, String>>);
-      //});
+      FirebaseFirestore.instance
+      .collection('chatrooms')
+      .doc(event)
+      .snapshots()
+      .listen((snapshot) {
+      add(snapshot.data()!['chat']);
+      });
     }
     try {
       if (event.runtimeType == List<dynamic>) {
@@ -44,16 +36,12 @@ class ChatBloc extends Bloc<dynamic, ChatState> {
             .collection('chatrooms')
             .doc(event[0])
             .get();
-        var chatUpdate = documentUpdate.data()?['chat'];
-        print(documentUpdate);
+        var chatUpdate = documentUpdate.data()?['chat'] as List<dynamic>;
+        chatUpdate.toList().reversed;
         yield ChatListState(chatUpdate);
       }
-    } catch (_) {
-      print('-');
-    }
-    ;
+    } catch (_) {}
     if ((event.runtimeType == List<dynamic>) && !sendList) {
-      print('+');
       yield ChatListState(event);
     }
   }

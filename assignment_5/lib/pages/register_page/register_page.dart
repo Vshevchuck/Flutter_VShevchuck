@@ -19,34 +19,48 @@ class RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    var screenHeight = (MediaQuery.of(context).size.height);
     return BlocProvider<RegisterBloc>(
       create: (context) => RegisterBloc(),
       child: SafeArea(
           child: Scaffold(
         appBar: AppBar(
-          title: Text('Register'),
+          title: const Text('Authorization'),
         ),
-        body: Column(
-          children: [
-            TextField(controller: nameController),
-            TextField(controller: emailController),
-            TextField(controller: passwordController),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Button(
-                    email: emailController.text,
-                    password: passwordController.text,
-                    name: nameController.text),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed('/login', arguments: null);
-                    },
-                    child: Text('Go back'))
-              ],
-            )
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              SizedBox(height: screenHeight / 5.0),
+              const Text("Register",
+                  style: TextStyle(fontSize: 25, color: Colors.black)),
+              TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(hintText: 'name')),
+              TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(hintText: 'email')),
+              TextField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(hintText: 'password')),
+              const SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Button(
+                      email: emailController.text,
+                      password: passwordController.text,
+                      name: nameController.text),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed('/login', arguments: null);
+                      },
+                      child: Text('Go back'))
+                ],
+              )
+            ],
+          ),
         ),
       )),
     );
@@ -72,9 +86,10 @@ class Button extends StatelessWidget {
     return BlocBuilder<RegisterBloc, RegisterState>(
       builder: (context, state) {
         if (state is UserRegisteredState) {
-            Future.delayed(Duration.zero, () {
-              Navigator.of(context)
-              .pushReplacementNamed('/main', arguments: state.user);});
+          Future.delayed(Duration.zero, () {
+            Navigator.of(context)
+                .pushReplacementNamed('/main', arguments: state.user);
+          });
         }
         return ElevatedButton(
             onPressed: () {
@@ -83,9 +98,9 @@ class Button extends StatelessWidget {
                   RegisterPageState.emailController.text,
                   RegisterPageState.passwordController.text);
               registerBloc.add(userModel);
-              RegisterPageState.emailController.text="";
-              RegisterPageState.passwordController.text="";
-              RegisterPageState.nameController.text="";
+              RegisterPageState.emailController.text = "";
+              RegisterPageState.passwordController.text = "";
+              RegisterPageState.nameController.text = "";
             },
             child: Text('Register'));
       },

@@ -1,10 +1,4 @@
-import 'package:assignment_5/bloc/login_state.dart';
-import 'package:assignment_5/bloc/register_state.dart';
-import 'package:assignment_5/bloc/user_provider.dart';
 import 'package:assignment_5/bloc/user_state.dart';
-import 'package:assignment_5/pages/login_page/login_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
@@ -14,8 +8,6 @@ class UserBloc extends Bloc<dynamic, UserState> {
 
   @override
   get initialState => UserLoadingState();
-
-
 
   @override
   Stream<UserState> mapEventToState(dynamic event) async* {

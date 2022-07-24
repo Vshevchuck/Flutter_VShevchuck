@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,11 +35,25 @@ class CheckChatRoom extends StatelessWidget {
     userBloc.add(users);
     return BlocBuilder<ChatRoomBloc, ChatRoomState>(builder: (context, state) {
       if (state is ChatRoomNewState) {
-        return ElevatedButton(
-            onPressed: () {
-              userBloc.add([users[1].uid.toString(), users[0].id.toString()]);
-            },
-            child: const Text('Create dialog'));
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Center(
+                child: Text(
+                  'You have not started a dialog with this user yet',
+                  style: TextStyle(fontSize: 18, color: Colors.black54),
+                ),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    userBloc
+                        .add([users[1].uid.toString(), users[0].id.toString()]);
+                  },
+                  child: const Text('Create dialog')),
+            ],
+          ),
+        );
       }
       if (state is ChatRoomIdState) {
         return Chat(id: state.chatRoomId, userId: users[1].uid.toString());
@@ -73,6 +88,8 @@ class ChatGetListWidget extends StatelessWidget {
   ChatGetListWidget({Key? key, required this.id, required this.userId})
       : super(key: key);
 
+  ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
@@ -80,6 +97,9 @@ class ChatGetListWidget extends StatelessWidget {
     chatBloc.add(id);
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
       if (state is ChatListState) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
         return Column(
           children: [
             Expanded(
@@ -87,6 +107,7 @@ class ChatGetListWidget extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: state.chat.length,
+                  controller: _scrollController,
                   itemBuilder: (context, index) {
                     String message = 'message';
                     String auth = 'auth';
@@ -102,38 +123,58 @@ class ChatGetListWidget extends StatelessWidget {
                             ? Alignment.topRight
                             : Alignment.topLeft,
                         child: FittedBox(
-                            clipBehavior: Clip.hardEdge,
+                          clipBehavior: Clip.hardEdge,
                           child: Container(
                               alignment: auth == userId
                                   ? Alignment.topRight
                                   : Alignment.topLeft,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: auth == userId ? Colors.blue : Colors.grey,
+                                color:
+                                    auth == userId ? Colors.blue : Colors.grey,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Container(constraints: BoxConstraints(maxWidth:250),
-                                    child: Text(softWrap:true,message, style: _style)),
+                                child: Container(
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 250),
+                                    child: Text(
+                                        softWrap: true,
+                                        message,
+                                        style: _style)),
                               )),
                         ),
                       ),
                     );
                   }),
             ),
-            Row(
-              children: [
-                Expanded(child: TextField(controller: messageController)),
-                IconButton(
-                    onPressed: () {
-                      chatBloc.add([
-                        id,
-                        {userId: messageController.text}
-                      ]);
-                      messageController.text="";
-                    },
-                    icon: Icon(Icons.send))
-              ],
+            Container(
+              decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Colors.grey,width: 1.5),
+                  )),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only( left: 6.0),
+                      child: TextField(
+                        controller: messageController,
+                        decoration: const InputDecoration(hintText: 'message'),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        chatBloc.add([
+                          id,
+                          {userId: messageController.text}
+                        ]);
+                        messageController.text = "";
+                      },
+                      icon: const Icon(Icons.send))
+                ],
+              ),
             ),
           ],
         );
@@ -142,7 +183,5 @@ class ChatGetListWidget extends StatelessWidget {
     });
   }
 
-  final TextStyle _style = TextStyle(color: Colors.white, fontSize: 15);
-
-
+  final TextStyle _style = const TextStyle(color: Colors.white, fontSize: 15);
 }

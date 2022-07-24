@@ -79,7 +79,7 @@ class CardWidget extends StatelessWidget {
               child: Center(
                   child: ListTile(
                 onTap: () {
-                  Navigator.of(context).pushReplacementNamed('/chatroom',
+                  Navigator.of(context).pushNamed('/chatroom',
                       arguments: [state.loadedUsers[index], dataUser]);
                 },
                 leading: Container(

@@ -35,28 +35,43 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    var screenHeight = (MediaQuery.of(context).size.height);
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(),
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(title: const Text('Authorization')),
-          body: Column(
-            children: [
-              TextField(controller: emailController),
-              TextField(controller: passwordController),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SignInButton(),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacementNamed('/register');
-                        setState(() {});
-                      },
-                      child: const Text('Sign Up')),
-                ],
-              )
-            ],
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                SizedBox(height: screenHeight / 4.5),
+                const Text("Login",
+                    style: TextStyle(fontSize: 25, color: Colors.black)),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(hintText: 'email'),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(hintText: 'password')),
+                const SizedBox(height: 8.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SignInButton(),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushReplacementNamed('/register');
+                          setState(() {});
+                        },
+                        child: const Text('Sign Up')),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -75,8 +90,7 @@ class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-    return BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
+    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       if (state is UserLoginedState) {
         Future.delayed(Duration.zero, () {
           Navigator.of(context)
@@ -88,8 +102,8 @@ class SignInButton extends StatelessWidget {
           UserLogin userModel = UserLogin(LoginPageState.emailController.text,
               LoginPageState.passwordController.text);
           loginBloc.add(userModel);
-          LoginPageState.emailController.text="";
-          LoginPageState.passwordController.text="";
+          LoginPageState.emailController.text = "";
+          LoginPageState.passwordController.text = "";
         },
         child: const Text('Sign In'),
       );
