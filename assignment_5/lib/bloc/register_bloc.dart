@@ -5,15 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/user_model.dart';
 
-class RegisterBloc extends Bloc<UserRegister, RegisterState> {
-  UserRegister userRegister = UserRegister('Empty', 'Empty', 'Empty');
-
+class RegisterBloc extends Bloc<dynamic, RegisterState> {
   @override
   get initialState => RegisterEmptyState();
 
   @override
-  Stream<RegisterState> mapEventToState(UserRegister event) async* {
-    if (event.email != "Empty") {
+  Stream<RegisterState> mapEventToState(dynamic event) async* {
+    if (event.runtimeType == String) {
+      yield RegisterEmptyState();
+    }
+    if (event.runtimeType == UserRegister) {
       User? user = FirebaseAuth.instance.currentUser;
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(

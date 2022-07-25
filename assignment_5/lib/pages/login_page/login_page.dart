@@ -28,7 +28,10 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   void didChangeDependencies() {
-    Object? checkLogOut = ModalRoute.of(context)?.settings.arguments;
+    Object? checkLogOut = ModalRoute
+        .of(context)
+        ?.settings
+        .arguments;
     if (checkLogOut != null) {
       logOut();
       checkLogOut = null;
@@ -38,7 +41,10 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    var screenHeight = (MediaQuery.of(context).size.height);
+    var screenHeight = (MediaQuery
+        .of(context)
+        .size
+        .height);
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(),
       child: SafeArea(
@@ -64,7 +70,7 @@ class LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SignInButton(),
+                    SignInButtonWidget(),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.of(context)
@@ -88,12 +94,15 @@ class LoginPageState extends State<LoginPage> {
   }
 }
 
-class SignInButton extends StatelessWidget {
-  SignInButton({Key? key}) : super(key: key);
+class SignInButtonWidget extends StatelessWidget {
+  const SignInButtonWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+    BlocProvider
+        .of<LoginBloc>(context)
+        .initialState;
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       if (state is UserLoginedState) {
         Future.delayed(Duration.zero, () {
@@ -102,11 +111,10 @@ class SignInButton extends StatelessWidget {
         });
       }
       if (state is LoginErrorState) {
-        print('+');
-        loginBloc.initialState;
+        loginBloc.add('initial');
         LoginPageState.message = state.message;
         scheduleMicrotask(
-            () => Navigator.of(context).restorablePush(_dialogBuilder));
+                () => Navigator.of(context).restorablePush(_dialogBuilder));
       }
       return Column(
         children: [
@@ -126,20 +134,21 @@ class SignInButton extends StatelessWidget {
     });
   }
 
-  static Route<Object?> _dialogBuilder(
-      BuildContext context, Object? arguments) {
+  static Route<Object?> _dialogBuilder(BuildContext context,
+      Object? arguments) {
     return DialogRoute<void>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(LoginPageState.message),
-        actions: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('ok'))
-        ],
-      ),
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: Text(LoginPageState.message),
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('ok'))
+            ],
+          ),
     );
   }
 }

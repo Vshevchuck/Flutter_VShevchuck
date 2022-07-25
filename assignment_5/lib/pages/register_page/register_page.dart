@@ -36,26 +36,23 @@ class RegisterPage extends StatelessWidget {
                   controller: nameController,
                   decoration: const InputDecoration(hintText: 'name')),
               TextField(
-                  obscureText: true,
                   controller: emailController,
                   decoration: const InputDecoration(hintText: 'email')),
               TextField(
+                  obscureText: true,
                   controller: passwordController,
                   decoration: const InputDecoration(hintText: 'password')),
               const SizedBox(height: 8.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Button(
-                      email: emailController.text,
-                      password: passwordController.text,
-                      name: nameController.text),
+                  const ButtonWidget(),
                   ElevatedButton(
                       onPressed: () {
                         Navigator.of(context)
                             .pushReplacementNamed('/login', arguments: null);
                       },
-                      child: Text('Go back'))
+                      child: const Text('Go back'))
                 ],
               )
             ],
@@ -66,16 +63,9 @@ class RegisterPage extends StatelessWidget {
   }
 }
 
-class Button extends StatelessWidget {
-  final String email;
-  final String password;
-  final String name;
-
-  const Button({
+class ButtonWidget extends StatelessWidget {
+  const ButtonWidget({
     Key? key,
-    required this.email,
-    required this.password,
-    required this.name,
   }) : super(key: key);
 
   @override
@@ -90,11 +80,9 @@ class Button extends StatelessWidget {
                 .pushReplacementNamed('/main', arguments: state.user);
           });
         }
-        print(registerBloc.state);
         if (state is RegisterErrorState) {
+          registerBloc.add('initial');
           LoginPageState.message = state.message;
-          registerBloc.initialState;
-          print(registerBloc.state);
           scheduleMicrotask(
               () => {Navigator.of(context).restorablePush(_dialogBuilder)});
         }
@@ -109,7 +97,7 @@ class Button extends StatelessWidget {
               RegisterPage.passwordController.text = "";
               RegisterPage.nameController.text = "";
             },
-            child: Text('Register'));
+            child: const Text('Register'));
       },
     );
   }
@@ -125,7 +113,7 @@ class Button extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('ok'))
+              child: const Text('ok'))
         ],
       ),
     );

@@ -1,11 +1,7 @@
 import 'dart:math';
-
-import 'package:assignment_5/bloc/user_provider.dart';
-import 'package:assignment_5/pages/chat_room/chat_room.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/user_state.dart';
@@ -35,24 +31,12 @@ class _MainPageState extends State<MainPage> {
                   Navigator.pushReplacementNamed(context, '/login',
                       arguments: true);
                 },
-                child: Text('Log out'))
+                child: const Text('Log out'))
           ],
         )),
         body: CardWidget(
           dataUser: dataUser,
         ),
-        //body: StreamBuilder(
-        //stream: FirebaseFirestore.instance.collection('users').snapshots(),
-        //builder:
-        // (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        //if (!snapshot.hasData) {
-        //return const Center(child: Text("No elements"));
-        //} else {
-        //userBloc.add(snapshot.data!.docs);
-        //print(snapshot.data!.docs.toList());
-        //}
-        //}
-        //),
       )),
     );
   }
@@ -76,39 +60,45 @@ class CardWidget extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                  child: ListTile(
+                  child: Container(
+              decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+                    color: index.isEven ? Colors.blue[50] : Colors.white54,),
+                    child: ListTile(
+                      //tileColor: index.isEven ? Colors.amber[50] : Colors.white,
                 onTap: () {
-                  Navigator.of(context).pushNamed('/chatroom',
-                      arguments: [state.loadedUsers[index], dataUser]);
+                    Navigator.of(context).pushNamed('/chatroom',
+                        arguments: [state.loadedUsers[index], dataUser]);
                 },
                 leading: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(90),
-                      color:
-                          Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0)
-                              .withOpacity(1.0),
-                    ),
-                    child: Center(
-                        child: Text(
-                      state.loadedUsers[index].name[0],
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18),
-                    ))),
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(90),
+                        color:
+                            Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0)
+                                .withOpacity(1.0),
+                      ),
+                      child: Center(
+                          child: Text(
+                        state.loadedUsers[index].name[0],
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      ))),
                 title: Column(
-                  children: [
-                    Text(
-                      state.loadedUsers[index].name,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Text(state.loadedUsers[index].email,
-                        style: const TextStyle(fontStyle: FontStyle.italic))
-                  ],
+                    children: [
+                      Text(
+                        state.loadedUsers[index].name,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Text(state.loadedUsers[index].email,
+                          style: const TextStyle(fontStyle: FontStyle.italic))
+                    ],
                 ),
-              )),
+              ),
+                  )),
             );
           },
         );

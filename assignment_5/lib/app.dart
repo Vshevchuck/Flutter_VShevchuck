@@ -11,10 +11,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {'/main' :(context,{arguments})=>MainPage(),
-      '/register' : (context) => RegisterPage(),
-      '/login' : (context,{arguments}) => LoginPage(),
-      '/chatroom':(context,{arguments}) =>ChatRoom()},
+      routes: {'/main' :(context,{arguments})=>const MainPage(),
+      '/register' : (context) => const RegisterPage(),
+      '/login' : (context,{arguments}) => const LoginPage(),
+      '/chatroom':(context,{arguments}) =>const ChatRoom()},
       initialRoute: '/login',
     );
   }
