@@ -1,18 +1,16 @@
+import 'dart:async';
+
 import 'package:assignment_5/bloc/register_bloc.dart';
 import 'package:assignment_5/bloc/register_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/user_model.dart';
+import '../login_page/login_page.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends StatelessWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
-  @override
-  State<RegisterPage> createState() => RegisterPageState();
-}
-
-class RegisterPageState extends State<RegisterPage> {
   static final emailController = TextEditingController();
   static final passwordController = TextEditingController();
   static final nameController = TextEditingController();
@@ -38,6 +36,7 @@ class RegisterPageState extends State<RegisterPage> {
                   controller: nameController,
                   decoration: const InputDecoration(hintText: 'name')),
               TextField(
+                  obscureText: true,
                   controller: emailController,
                   decoration: const InputDecoration(hintText: 'email')),
               TextField(
@@ -91,19 +90,44 @@ class Button extends StatelessWidget {
                 .pushReplacementNamed('/main', arguments: state.user);
           });
         }
+        print(registerBloc.state);
+        if (state is RegisterErrorState) {
+          LoginPageState.message = state.message;
+          registerBloc.initialState;
+          print(registerBloc.state);
+          scheduleMicrotask(
+              () => {Navigator.of(context).restorablePush(_dialogBuilder)});
+        }
         return ElevatedButton(
             onPressed: () {
               UserRegister userModel = UserRegister(
-                  RegisterPageState.nameController.text,
-                  RegisterPageState.emailController.text,
-                  RegisterPageState.passwordController.text);
+                  RegisterPage.nameController.text,
+                  RegisterPage.emailController.text,
+                  RegisterPage.passwordController.text);
               registerBloc.add(userModel);
-              RegisterPageState.emailController.text = "";
-              RegisterPageState.passwordController.text = "";
-              RegisterPageState.nameController.text = "";
+              RegisterPage.emailController.text = "";
+              RegisterPage.passwordController.text = "";
+              RegisterPage.nameController.text = "";
             },
             child: Text('Register'));
       },
+    );
+  }
+
+  static Route<Object?> _dialogBuilder(
+      BuildContext context, Object? arguments) {
+    return DialogRoute<void>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(LoginPageState.message),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('ok'))
+        ],
+      ),
     );
   }
 }

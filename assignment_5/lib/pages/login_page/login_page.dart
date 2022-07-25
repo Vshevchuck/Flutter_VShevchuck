@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
+  static String message = '';
   static final emailController = TextEditingController();
   static final passwordController = TextEditingController();
 
@@ -54,6 +57,7 @@ class LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
+                    obscureText: true,
                     controller: passwordController,
                     decoration: const InputDecoration(hintText: 'password')),
                 const SizedBox(height: 8.0),
@@ -85,7 +89,7 @@ class LoginPageState extends State<LoginPage> {
 }
 
 class SignInButton extends StatelessWidget {
-  const SignInButton({Key? key}) : super(key: key);
+  SignInButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -97,16 +101,45 @@ class SignInButton extends StatelessWidget {
               .pushReplacementNamed('/main', arguments: state.user);
         });
       }
-      return ElevatedButton(
-        onPressed: () async {
-          UserLogin userModel = UserLogin(LoginPageState.emailController.text,
-              LoginPageState.passwordController.text);
-          loginBloc.add(userModel);
-          LoginPageState.emailController.text = "";
-          LoginPageState.passwordController.text = "";
-        },
-        child: const Text('Sign In'),
+      if (state is LoginErrorState) {
+        print('+');
+        loginBloc.initialState;
+        LoginPageState.message = state.message;
+        scheduleMicrotask(
+            () => Navigator.of(context).restorablePush(_dialogBuilder));
+      }
+      return Column(
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              UserLogin userModel = UserLogin(
+                  LoginPageState.emailController.text,
+                  LoginPageState.passwordController.text);
+              loginBloc.add(userModel);
+              LoginPageState.emailController.text = "";
+              LoginPageState.passwordController.text = "";
+            },
+            child: const Text('Sign In'),
+          ),
+        ],
       );
     });
+  }
+
+  static Route<Object?> _dialogBuilder(
+      BuildContext context, Object? arguments) {
+    return DialogRoute<void>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(LoginPageState.message),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('ok'))
+        ],
+      ),
+    );
   }
 }

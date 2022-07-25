@@ -73,7 +73,6 @@ class CardWidget extends StatelessWidget {
           shrinkWrap: true,
           itemCount: state.loadedUsers.length,
           itemBuilder: (context, index) {
-            print(state.loadedUsers[index].email);
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
