@@ -31,26 +31,26 @@ class RegisterBloc extends Bloc<dynamic, RegisterState> {
 
         yield UserRegisteredState(user!);
       } catch (_) {
-        bool checkError = false;
-        if (!event.email.contains('.') || !event.email.contains('@')) {
-          checkError = true;
-          yield RegisterErrorState(
-              'invalid email input form , please check availability . or @');
-        }
-        if (event.password.length < 6) {
-          checkError = true;
-          yield RegisterErrorState('password must be at least 6 characters');
-        }
-        if (event.email.isEmpty ||
-            event.password.isEmpty ||
-            event.name.isEmpty) {
-          checkError = true;
-          yield RegisterErrorState('Fill in all the fields');
-        }
-        if (!checkError) {
-          yield RegisterErrorState("something went wrong, please login again");
-        }
+        yield RegisterErrorState(checkRegisterError(event));
       }
+    }
+  }
+  String checkRegisterError(UserRegister user) {
+    bool checkError = false;
+    if (user.password.length < 6) {
+      checkError = true;
+      return ('password must be at least 6 characters');
+    }
+    if (user.email.isEmpty || user.password.isEmpty || user.name.isEmpty) {
+      checkError = true;
+      return ('Fill in all the fields');
+    }
+    if (!user.email.contains('.') || !user.email.contains('@')) {
+      checkError = true;
+      return ('invalid email input form , please check availability . or @');
+    }
+    if (!checkError) {
+      return ("something went wrong, please login again");
     }
   }
 }

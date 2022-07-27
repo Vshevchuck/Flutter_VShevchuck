@@ -38,7 +38,6 @@ class ChatBloc extends Bloc<dynamic, ChatState> {
             .get();
         var chatUpdate = (documentUpdate.data()?['chat'] as List<dynamic>);
         var reversed=chatUpdate.reversed.toList();
-        print(reversed);
         yield ChatListState(reversed);
       }
     } catch (_) {}

@@ -1,4 +1,4 @@
-import 'package:assignment_5/pages/chat_room/chat_room.dart';
+import 'package:assignment_5/pages/chat_room/chat_room_page.dart';
 import 'package:assignment_5/pages/login_page/login_page.dart';
 import 'package:assignment_5/pages/main_page/main_page.dart';
 import 'package:assignment_5/pages/register_page/register_page.dart';
@@ -14,7 +14,7 @@ class App extends StatelessWidget {
       routes: {'/main' :(context,{arguments})=>const MainPage(),
       '/register' : (context) => const RegisterPage(),
       '/login' : (context,{arguments}) => const LoginPage(),
-      '/chatroom':(context,{arguments}) =>const ChatRoom()},
+      '/chatroom':(context,{arguments}) =>const ChatRoomPage()},
       initialRoute: '/login',
     );
   }

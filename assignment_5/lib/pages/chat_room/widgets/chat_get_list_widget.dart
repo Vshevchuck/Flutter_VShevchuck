@@ -1,86 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/chat_bloc.dart';
-import '../../bloc/chat_room_bloc.dart';
-import '../../bloc/chat_room_state.dart';
-import '../../bloc/chat_state.dart';
-import '../../bloc/register_state.dart';
-
-class ChatRoom extends StatelessWidget {
-  const ChatRoom({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final users = (ModalRoute.of(context)?.settings.arguments) as List<dynamic>;
-    return SafeArea(
-        child: Scaffold(
-            appBar: AppBar(title: Text(users[0].email)),
-            body: BlocProvider<ChatRoomBloc>(
-              create: (context) => ChatRoomBloc(),
-              child: CheckChatRoom(users: users),
-            )));
-  }
-}
-
-class CheckChatRoom extends StatelessWidget {
-  final users;
-
-  const CheckChatRoom({Key? key, required this.users}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final ChatRoomBloc userBloc = BlocProvider.of<ChatRoomBloc>(context);
-    userBloc.add(users);
-    return BlocBuilder<ChatRoomBloc, ChatRoomState>(builder: (context, state) {
-      if (state is ChatRoomNewState) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Center(
-                child: Text(
-                  'You have not started a dialog with this user yet',
-                  style: TextStyle(fontSize: 18, color: Colors.black54),
-                ),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    userBloc
-                        .add([users[1].uid.toString(), users[0].id.toString()]);
-                  },
-                  child: const Text('Create dialog')),
-            ],
-          ),
-        );
-      }
-      if (state is ChatRoomIdState) {
-        return Chat(id: state.chatRoomId, userId: users[1].uid.toString());
-      }
-      return const Center(child: CircularProgressIndicator());
-    });
-  }
-}
-
-class Chat extends StatelessWidget {
-  final id;
-  final userId;
-
-  const Chat({Key? key, required this.id, required this.userId})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<ChatBloc>(
-        create: (context) => ChatBloc(),
-        child: ChatGetListWidget(
-          id: id,
-          userId: userId,
-        ));
-  }
-}
+import '../../../bloc/chat_bloc.dart';
+import '../../../bloc/chat_state.dart';
 
 class ChatGetListWidget extends StatelessWidget {
   final id;
@@ -134,13 +59,13 @@ class ChatGetListWidget extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color:
-                                    auth == userId ? Colors.blue : Colors.grey,
+                                auth == userId ? Colors.blue : Colors.grey,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
                                     constraints:
-                                        const BoxConstraints(maxWidth: 250),
+                                    const BoxConstraints(maxWidth: 250),
                                     child: Text(
                                         softWrap: true,
                                         message,
@@ -154,8 +79,8 @@ class ChatGetListWidget extends StatelessWidget {
             Container(
               decoration: const BoxDecoration(
                   border: Border(
-                top: BorderSide(color: Colors.grey, width: 1.5),
-              )),
+                    top: BorderSide(color: Colors.grey, width: 1.5),
+                  )),
               child: Row(
                 children: [
                   Expanded(

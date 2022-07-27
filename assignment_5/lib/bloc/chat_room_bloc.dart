@@ -9,17 +9,10 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
 
   @override
   Stream<ChatRoomState> mapEventToState(dynamic event) async* {
-    List<Map<String,String>> chat=[{'admin':'start the dialog'}];
     bool newRoom = true;
     String id = '';
     if (event.runtimeType == List<String>) {
-      print('+');
-      FirebaseFirestore.instance.collection('chatrooms').add({
-        'id_first_user': event[0],
-        'id_second_user': event[1],
-        'id': '${event[0]}-${event[1]}',
-        'chat': chat
-      });
+      addChat(event);
       FirebaseFirestore.instance
           .collection('chatrooms')
           .snapshots()
@@ -36,38 +29,16 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
           .listen((snapshot) {
         for (int i = snapshot.docs.length - 1; i >= 0; i--) {
           if (snapshot.docs[i].get('id') == event[0]) {
-            Map<String, dynamic> chatrooms =
-                snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
-            chatrooms.addAll({id: event[1]});
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(snapshot.docs[i].id)
-                .set({'chatrooms': chatrooms}, SetOptions(merge: true));
+            addChatToUser(id, event[1], snapshot, i);
           }
           if (snapshot.docs[i].get('id') == event[1]) {
-            Map<String, dynamic> chatrooms =
-                snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
-            chatrooms.addAll({id: event[0]});
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(snapshot.docs[i].id)
-                .set({'chatrooms': chatrooms}, SetOptions(merge: true));
+            addChatToUser(id, event[0], snapshot, i);
           }
         }
       });
-      print(id);
       yield ChatRoomIdState(id);
     } else if (event.runtimeType == List<Object>) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .snapshots()
-          .listen((snapshot) {
-        for (int i = 0; i < snapshot.docs.length; i++) {
-          if (snapshot.docs[i].get('id') == event[1].uid) {
-            add([snapshot.docs[i].get('chatrooms'), event[0].id]);
-          }
-        }
-      });
+      findUserChatRooms(event[1].uid, event[0].id);
     } else if (event != null) {
       if (event.isEmpty) {
         yield ChatRoomNewState();
@@ -83,5 +54,42 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
         }
       }
     }
+  }
+
+
+
+  void findUserChatRooms(String loginedUserId, String secondUserId) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .snapshots()
+        .listen((snapshot) {
+      for (int i = 0; i < snapshot.docs.length; i++) {
+        if (snapshot.docs[i].get('id') == loginedUserId) {
+          add([snapshot.docs[i].get('chatrooms'), secondUserId]);
+        }
+      }
+    });
+  }
+
+  void addChatToUser(String id, String secondUser,
+      QuerySnapshot<Map<String, dynamic>> snapshot, int i) {
+    Map<String, dynamic> chatrooms =
+        snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
+    chatrooms.addAll({id: secondUser});
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(snapshot.docs[i].id)
+        .set({'chatrooms': chatrooms}, SetOptions(merge: true));
+  }
+
+  void addChat(List<String> users) {
+    FirebaseFirestore.instance.collection('chatrooms').add({
+      'id_first_user': users[0],
+      'id_second_user': users[1],
+      'id': '${users[0]}-${users[1]}',
+      'chat': [
+        {'admin': 'start the dialog'}
+      ]
+    });
   }
 }

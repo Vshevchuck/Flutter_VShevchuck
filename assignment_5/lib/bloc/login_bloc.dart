@@ -23,24 +23,28 @@ class LoginBloc extends Bloc<dynamic, LoginState> {
         user = FirebaseAuth.instance.currentUser;
         yield UserLoginedState(user!);
       } catch (_) {
-        bool checkError = false;
-        if (!event.email.contains('.') || !event.email.contains('@')) {
-          checkError = true;
-          yield LoginErrorState(
-              'invalid email input form , please check availability . or @');
-        }
-        if (event.password.length < 6) {
-          checkError = true;
-          yield LoginErrorState('password must be at least 6 characters');
-        }
-        if (event.email.isEmpty || event.password.isEmpty) {
-          checkError = true;
-          yield LoginErrorState('Fill in all the fields');
-        }
-        if (!checkError) {
-          yield LoginErrorState("something went wrong, please login again");
-        }
+        yield LoginErrorState(checkLoginError(event));
       }
+    }
+  }
+  String checkLoginError(UserLogin user)
+  {
+    bool checkError = false;
+    if (user.email.isEmpty || user.password.isEmpty) {
+      checkError = true;
+      return('Fill in all the fields');
+    }
+    if (user.password.length < 6) {
+      checkError = true;
+      return('password must be at least 6 characters');
+    }
+    if (!user.email.contains('.') || !user.email.contains('@')) {
+      checkError = true;
+      return(
+          'invalid email input form , please check availability . or @');
+    }
+    if (!checkError) {
+      return("something went wrong, please login again");
     }
   }
 }
