@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,15 +13,17 @@ class ChatBloc extends Bloc<dynamic, ChatState> {
   Stream<ChatState> mapEventToState(dynamic event) async* {
     bool sendList=false;
     if (event.runtimeType == String) {
+      try{
       FirebaseFirestore.instance
       .collection('chatrooms')
       .doc(event)
       .snapshots()
       .listen((snapshot) {
-      add(snapshot.data()!['chat']);
-      });
+            add(snapshot.data()!['chat']);
+      });}catch(_){}
     }
     try {
+      String message='';
       if (event.runtimeType == List<dynamic>) {
         var document = await FirebaseFirestore.instance
             .collection('chatrooms')
@@ -27,11 +31,15 @@ class ChatBloc extends Bloc<dynamic, ChatState> {
             .get();
         List<dynamic> chat = document.data()?['chat'];
         chat.add(event[1]);
+        var messageAuth = event[1] as Map<dynamic, String>;
+        for (var item in messageAuth.entries) {
+           message=item.value;
+        }
         sendList=true;
         FirebaseFirestore.instance
             .collection('chatrooms')
             .doc(event[0])
-            .set({'chat': chat}, SetOptions(merge: true));
+            .set({'chat': chat,'lastMessage':message}, SetOptions(merge: true));
         var documentUpdate = await FirebaseFirestore.instance
             .collection('chatrooms')
             .doc(event[0])
@@ -40,7 +48,7 @@ class ChatBloc extends Bloc<dynamic, ChatState> {
         var reversed=chatUpdate.reversed.toList();
         yield ChatListState(reversed);
       }
-    } catch (_) {}
+    } catch (_) {print('+');}
     if ((event.runtimeType == List<dynamic>) && !sendList) {
       var reversed=event.reversed.toList();
       yield ChatListState(reversed);

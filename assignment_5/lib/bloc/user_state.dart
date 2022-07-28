@@ -10,6 +10,6 @@ class UserEmptyState extends UserState{}
 class UserErrorState extends UserState{}
 
 class UserLoadedState extends UserState{
-  List<UserModel> loadedUsers;
+  List<dynamic> loadedUsers;
   UserLoadedState(this.loadedUsers);
 }

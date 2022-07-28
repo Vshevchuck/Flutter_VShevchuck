@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:assignment_5/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,7 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-    userBloc.add(true); // init ?
+    userBloc.add(dataUser.uid);
     return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
       if (state is UserLoadedState) {
         return ListView.builder(
@@ -26,44 +27,47 @@ class CardWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                   child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: index.isEven ? Colors.blue[50] : Colors.white54,),
-                    child: ListTile(
-                      //tileColor: index.isEven ? Colors.amber[50] : Colors.white,
-                      onTap: () {
-                        Navigator.of(context).pushNamed('/chatroom',
-                            arguments: [state.loadedUsers[index], dataUser]);
-                      },
-                      leading: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(90),
-                            color:
-                            Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0)
-                                .withOpacity(1.0),
-                          ),
-                          child: Center(
-                              child: Text(
-                                state.loadedUsers[index].name[0],
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18),
-                              ))),
-                      title: Column(
-                        children: [
-                          Text(
-                            state.loadedUsers[index].name,
-                            style: const TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          Text(state.loadedUsers[index].email,
-                              style: const TextStyle(fontStyle: FontStyle.italic))
-                        ],
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: index.isEven ? Colors.blue[50] : Colors.white54,
+                ),
+                child: ListTile(
+                  tileColor: index.isEven ? Colors.amber[50] : Colors.white,
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/chatroom',
+                        arguments: [state.loadedUsers[index][0] as UserModel , dataUser]);
+                  },
+                  leading: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(90),
+                        color: Color(
+                                (Random().nextDouble() * 0xFFFFFF).toInt() << 0)
+                            .withOpacity(1.0),
                       ),
-                    ),
-                  )),
+                      child: Center(
+                          child: Text(
+                        state.loadedUsers[index][0].name[0],
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      ))),
+                  title: Column(
+                    children: [
+                      Text(
+                        state.loadedUsers[index][0].name,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Text(state.loadedUsers[index][0].email,
+                          style: const TextStyle(fontStyle: FontStyle.italic)),
+                      Text(state.loadedUsers[index][1],
+                          style: const TextStyle(fontStyle: FontStyle.italic)),
+                    ],
+                  ),
+                ),
+              )),
             );
           },
         );

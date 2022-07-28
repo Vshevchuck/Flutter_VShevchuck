@@ -89,7 +89,8 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
       'id': '${users[0]}-${users[1]}',
       'chat': [
         {'admin': 'start the dialog'}
-      ]
+      ],
+      'lastMessage' : ''
     });
   }
 }
