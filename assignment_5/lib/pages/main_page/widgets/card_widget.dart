@@ -62,10 +62,10 @@ class CardWidget extends StatelessWidget {
                       ),
                       Text(state.loadedUsers[index][0].email,
                           style: const TextStyle(fontStyle: FontStyle.italic)),
-                      Text(state.loadedUsers[index][1],
-                          style: const TextStyle(fontStyle: FontStyle.italic)),
                     ],
                   ),
+                  subtitle: Text(state.loadedUsers[index][1],
+                      style: const TextStyle(fontStyle: FontStyle.italic)),
                 ),
               )),
             );

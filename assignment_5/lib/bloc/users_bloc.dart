@@ -1,13 +1,9 @@
-import 'dart:math';
-
 import 'package:assignment_5/bloc/user_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 
 class UserBloc extends Bloc<dynamic, UserState> {
-  List<dynamic> usersAndLastMessage = <dynamic>[];
-
   @override
   get initialState => UserLoadingState();
   String id = '';
@@ -24,43 +20,31 @@ class UserBloc extends Bloc<dynamic, UserState> {
       });
     }
     if (event != null) {
-      String lastMessage = '-';
+      List<dynamic> usersAndLastMessage = <dynamic>[];
       try {
         for (int i = 0; i < event.length; i++) {
+          String lastMessage = 'you did not start message';
           UserModel userInList = UserModel.fromJson(event[i].data());
-          try {
-            //print(FirebaseFirestore.instance
-            //.collection('chatrooms')
-            //.where('id', isEqualTo: '$id-${userInList.id}').get().then((
-            //snapshot) { print(snapshot.docs[0].get('lastMessage'));}));
-            FirebaseFirestore.instance
-                .collection('chatrooms')
-                .where('id', isEqualTo: '$id-${userInList.id}')
-                .snapshots()
-                .listen((snapshot) {
-                  print(snapshot.docs);
-              if (snapshot.docs.isNotEmpty) {
-                lastMessage = snapshot.docs[0].get('lastMessage');
-                print(lastMessage);
-              }
-            });
-          } catch (_) {
-            print("+");
-          }
-          FirebaseFirestore.instance
+          var getLastMessage = await FirebaseFirestore.instance
               .collection('chatrooms')
-              .where('id', isEqualTo: '${userInList.id}-$id')
-              .snapshots()
-              .listen((snapshot) {
-            if (snapshot.docs.isNotEmpty) {
-              lastMessage = snapshot.docs[0].get('lastMessage');
+              .where('id', isEqualTo: '$id-${userInList.id}')
+              .get();
+          if (getLastMessage.docs.isNotEmpty) {
+            lastMessage = getLastMessage.docs[0].get('lastMessage');
+          } else {
+            getLastMessage = await FirebaseFirestore.instance
+                .collection('chatrooms')
+                .where('id', isEqualTo: '${userInList.id}-$id')
+                .get();
+            if (getLastMessage.docs.isNotEmpty) {
+              lastMessage = getLastMessage.docs[0].get('lastMessage');
             }
-          });
+          }
           usersAndLastMessage.add([userInList, lastMessage]);
         }
         yield UserLoadedState(usersAndLastMessage);
-      } catch (_) {
-      }
+      } catch (_) {}
     }
   }
+
 }

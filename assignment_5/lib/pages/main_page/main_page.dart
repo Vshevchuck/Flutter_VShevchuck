@@ -28,6 +28,11 @@ class _MainPageState extends State<MainPage> {
             Expanded(child: Text('${dataUser.email}')),
             ElevatedButton(
                 onPressed: () {
+                  setState((){});
+                },
+                child: const Text('Update')),
+            ElevatedButton(
+                onPressed: () {
                   Navigator.pushReplacementNamed(context, '/login',
                       arguments: true);
                 },
