@@ -29,7 +29,7 @@ class CheckChatRoomWidget extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     userBloc
-                        .add([users[1].uid.toString(), users[0].id.toString()]);
+                        .add([users[1].uid.toString(), users.first.id.toString()]);
                   },
                   child: const Text('Create dialog')),
             ],

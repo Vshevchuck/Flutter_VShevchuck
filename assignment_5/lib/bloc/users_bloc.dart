@@ -30,14 +30,14 @@ class UserBloc extends Bloc<dynamic, UserState> {
               .where('id', isEqualTo: '$id-${userInList.id}')
               .get();
           if (getLastMessage.docs.isNotEmpty) {
-            lastMessage = getLastMessage.docs[0].get('lastMessage');
+            lastMessage = getLastMessage.docs.first.get('lastMessage');
           } else {
             getLastMessage = await FirebaseFirestore.instance
                 .collection('chatrooms')
                 .where('id', isEqualTo: '${userInList.id}-$id')
                 .get();
             if (getLastMessage.docs.isNotEmpty) {
-              lastMessage = getLastMessage.docs[0].get('lastMessage');
+              lastMessage = getLastMessage.docs.first.get('lastMessage');
             }
           }
           usersAndLastMessage.add([userInList, lastMessage]);

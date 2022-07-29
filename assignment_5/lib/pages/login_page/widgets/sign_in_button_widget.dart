@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:assignment_5/pages/login_page/widgets/dialog_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,9 +15,7 @@ class SignInButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-    BlocProvider
-        .of<LoginBloc>(context)
-        .initialState;
+    BlocProvider.of<LoginBloc>(context).initialState;
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       if (state is UserLoginedState) {
         Future.delayed(Duration.zero, () {
@@ -28,7 +27,7 @@ class SignInButtonWidget extends StatelessWidget {
         loginBloc.add('initial');
         LoginPageState.message = state.message;
         scheduleMicrotask(
-                () => Navigator.of(context).restorablePush(_dialogBuilder));
+            () => Navigator.of(context).restorablePush(showMessage.dialogBuilderWidget));
       }
       return Column(
         children: [
@@ -46,23 +45,5 @@ class SignInButtonWidget extends StatelessWidget {
         ],
       );
     });
-  }
-
-  static Route<Object?> _dialogBuilder(BuildContext context,
-      Object? arguments) {
-    return DialogRoute<void>(
-      context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: Text(LoginPageState.message),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('ok'))
-            ],
-          ),
-    );
   }
 }

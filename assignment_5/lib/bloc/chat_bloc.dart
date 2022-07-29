@@ -11,46 +11,47 @@ class ChatBloc extends Bloc<dynamic, ChatState> {
 
   @override
   Stream<ChatState> mapEventToState(dynamic event) async* {
-    bool sendList=false;
+    bool sendList = false;
     if (event.runtimeType == String) {
-      try{
-      FirebaseFirestore.instance
-      .collection('chatrooms')
-      .doc(event)
-      .snapshots()
-      .listen((snapshot) {
-            add(snapshot.data()!['chat']);
-      });}catch(_){}
+      try {
+        FirebaseFirestore.instance
+            .collection('chatrooms')
+            .doc(event)
+            .snapshots()
+            .listen((snapshot) {
+          add(snapshot.data()!['chat']);
+        });
+      } catch (_) {}
     }
     try {
-      String message='';
+      String message = '';
       if (event.runtimeType == List<dynamic>) {
         var document = await FirebaseFirestore.instance
             .collection('chatrooms')
-            .doc(event[0])
+            .doc(event.first)
             .get();
         List<dynamic> chat = document.data()?['chat'];
         chat.add(event[1]);
         var messageAuth = event[1] as Map<dynamic, String>;
         for (var item in messageAuth.entries) {
-           message=item.value;
+          message = item.value;
         }
-        sendList=true;
-        FirebaseFirestore.instance
-            .collection('chatrooms')
-            .doc(event[0])
-            .set({'chat': chat,'lastMessage':message}, SetOptions(merge: true));
+        sendList = true;
+        FirebaseFirestore.instance.collection('chatrooms').doc(event.first).set(
+            {'chat': chat, 'lastMessage': message}, SetOptions(merge: true));
         var documentUpdate = await FirebaseFirestore.instance
             .collection('chatrooms')
-            .doc(event[0])
+            .doc(event.first)
             .get();
         var chatUpdate = (documentUpdate.data()?['chat'] as List<dynamic>);
-        var reversed=chatUpdate.reversed.toList();
+        var reversed = chatUpdate.reversed.toList();
         yield ChatListState(reversed);
       }
-    } catch (_) {print('+');}
+    } catch (_) {
+      print('+');
+    }
     if ((event.runtimeType == List<dynamic>) && !sendList) {
-      var reversed=event.reversed.toList();
+      var reversed = event.reversed.toList();
       yield ChatListState(reversed);
     }
   }

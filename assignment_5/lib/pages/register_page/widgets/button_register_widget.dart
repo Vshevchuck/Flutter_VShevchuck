@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:assignment_5/pages/login_page/widgets/dialog_builder_widget.dart';
 import 'package:assignment_5/pages/register_page/register_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class ButtonRegisterWidget extends StatelessWidget {
           registerBloc.add('initial');
           LoginPageState.message = state.message;
           scheduleMicrotask(
-                  () => {Navigator.of(context).restorablePush(_dialogBuilder)});
+                  () => {Navigator.of(context).restorablePush(showMessage.dialogBuilderWidget)});
         }
         return ElevatedButton(
             onPressed: () {
@@ -46,23 +47,6 @@ class ButtonRegisterWidget extends StatelessWidget {
             },
             child: const Text('Register'));
       },
-    );
-  }
-
-  static Route<Object?> _dialogBuilder(
-      BuildContext context, Object? arguments) {
-    return DialogRoute<void>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(LoginPageState.message),
-        actions: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('ok'))
-        ],
-      ),
     );
   }
 }

@@ -18,7 +18,7 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
           .snapshots()
           .listen((snapshot) {
         for (int i = 0; i < snapshot.docs.length; i++) {
-          if (snapshot.docs[i].get('id') == '${event[0]}-${event[1]}') {
+          if (snapshot.docs[i].get('id') == '${event.first}-${event[1]}') {
             id = snapshot.docs[i].id;
           }
         }
@@ -28,22 +28,22 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
           .snapshots()
           .listen((snapshot) {
         for (int i = snapshot.docs.length - 1; i >= 0; i--) {
-          if (snapshot.docs[i].get('id') == event[0]) {
+          if (snapshot.docs[i].get('id') == event.first) {
             addChatToUser(id, event[1], snapshot, i);
           }
           if (snapshot.docs[i].get('id') == event[1]) {
-            addChatToUser(id, event[0], snapshot, i);
+            addChatToUser(id, event.first, snapshot, i);
           }
         }
       });
       yield ChatRoomIdState(id);
     } else if (event.runtimeType == List<Object>) {
-      findUserChatRooms(event[1].uid, event[0].id);
+      findUserChatRooms(event[1].uid, event.first.id);
     } else if (event != null) {
       if (event.isEmpty) {
         yield ChatRoomNewState();
       } else {
-        for (var item in event[0].entries) {
+        for (var item in event.first.entries) {
           if (item.value == event[1]) {
             newRoom = false;
             yield ChatRoomIdState(item.key);
@@ -84,9 +84,9 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
 
   void addChat(List<String> users) {
     FirebaseFirestore.instance.collection('chatrooms').add({
-      'id_first_user': users[0],
+      'id_first_user': users.first,
       'id_second_user': users[1],
-      'id': '${users[0]}-${users[1]}',
+      'id': '${users.first}-${users[1]}',
       'chat': [
         {'admin': 'start the dialog'}
       ],

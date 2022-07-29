@@ -12,7 +12,7 @@ class ChatRoomPage extends StatelessWidget {
     final users = (ModalRoute.of(context)?.settings.arguments) as List<dynamic>;
     return SafeArea(
         child: Scaffold(
-            appBar: AppBar(title: Text(users[0].email)),
+            appBar: AppBar(title: Text(users.first.email)),
             body: BlocProvider<ChatRoomBloc>(
               create: (context) => ChatRoomBloc(),
               child: CheckChatRoomWidget(users: users),

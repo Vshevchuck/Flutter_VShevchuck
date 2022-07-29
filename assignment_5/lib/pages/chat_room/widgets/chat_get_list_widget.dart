@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/chat_bloc.dart';
 import '../../../bloc/chat_state.dart';
+import 'message_widget.dart';
 
 class ChatGetListWidget extends StatelessWidget {
   final id;
@@ -24,8 +25,9 @@ class ChatGetListWidget extends StatelessWidget {
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
       if (state is ChatListState) {
         if (_scrollController.hasClients) {
-          scheduleMicrotask(
-                  () =>(_scrollController.jumpTo(_scrollController.position.minScrollExtent)));
+          scheduleMicrotask(() =>
+          (_scrollController
+              .jumpTo(_scrollController.position.minScrollExtent)));
         }
         return Column(
           children: [
@@ -44,36 +46,7 @@ class ChatGetListWidget extends StatelessWidget {
                       message = item.value;
                       auth = item.key;
                     }
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Align(
-                        alignment: auth == userId
-                            ? Alignment.topRight
-                            : Alignment.topLeft,
-                        child: FittedBox(
-                          clipBehavior: Clip.hardEdge,
-                          child: Container(
-                              alignment: auth == userId
-                                  ? Alignment.topRight
-                                  : Alignment.topLeft,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color:
-                                auth == userId ? Colors.blue : Colors.grey,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                    constraints:
-                                    const BoxConstraints(maxWidth: 250),
-                                    child: Text(
-                                        softWrap: true,
-                                        message,
-                                        style: _style)),
-                              )),
-                        ),
-                      ),
-                    );
+                    return MessageWidget(userId: userId, auth: auth, message: message);
                   }),
             ),
             Container(
@@ -110,6 +83,5 @@ class ChatGetListWidget extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     });
   }
-
-  final TextStyle _style = const TextStyle(color: Colors.white, fontSize: 15);
 }
+
