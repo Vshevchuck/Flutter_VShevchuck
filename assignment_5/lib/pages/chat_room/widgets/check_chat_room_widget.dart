@@ -1,3 +1,4 @@
+import 'package:assignment_5/bloc/chat_room_bloc/chat_room_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,8 +13,8 @@ class CheckChatRoomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatRoomBloc userBloc = BlocProvider.of<ChatRoomBloc>(context);
-    userBloc.add(users);
+    final ChatRoomBloc chatRoomBloc = BlocProvider.of<ChatRoomBloc>(context);
+    chatRoomBloc.add(FindChatRoomEvent(users));
     return BlocBuilder<ChatRoomBloc, ChatRoomState>(builder: (context, state) {
       if (state is ChatRoomNewState) {
         return Center(
@@ -28,8 +29,8 @@ class CheckChatRoomWidget extends StatelessWidget {
               ),
               ElevatedButton(
                   onPressed: () {
-                    userBloc
-                        .add([users[1].uid.toString(), users.first.id.toString()]);
+                   chatRoomBloc
+                        .add(CreateChatRoomEvent([users[1].uid.toString(), users.first.id.toString()]));
                   },
                   child: const Text('Create dialog')),
             ],

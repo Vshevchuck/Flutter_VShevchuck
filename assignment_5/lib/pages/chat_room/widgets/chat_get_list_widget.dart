@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/chat_bloc/chat_bloc.dart';
+import '../../../bloc/chat_bloc/chat_event.dart';
 import '../../../bloc/chat_bloc/chat_state.dart';
 import 'message_widget.dart';
 
@@ -21,7 +22,7 @@ class ChatGetListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
     final messageController = TextEditingController();
-    chatBloc.add(id);
+    chatBloc.add(GetChatId(id));
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
       if (state is ChatListState) {
         if (_scrollController.hasClients) {
@@ -67,10 +68,10 @@ class ChatGetListWidget extends StatelessWidget {
                   ),
                   IconButton(
                       onPressed: () {
-                        chatBloc.add([
+                        chatBloc.add(SendMessage([
                           id,
                           {userId: messageController.text}
-                        ]);
+                        ]));
                         messageController.text = "";
                       },
                       icon: const Icon(Icons.send))
