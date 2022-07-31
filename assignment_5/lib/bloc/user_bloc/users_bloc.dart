@@ -1,30 +1,31 @@
-import 'package:assignment_5/bloc/user_state.dart';
+import 'package:assignment_5/bloc/user_bloc/user_event.dart';
+import 'package:assignment_5/bloc/user_bloc/user_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user_model.dart';
+import '../../models/user_model.dart';
 
-class UserBloc extends Bloc<dynamic, UserState> {
+class UserBloc extends Bloc<UserEvent, UserState> {
   @override
   get initialState => UserLoadingState();
   String id = '';
 
   @override
-  Stream<UserState> mapEventToState(dynamic event) async* {
-    if (event.runtimeType == String) {
-      id = event;
+  Stream<UserState> mapEventToState(UserEvent event) async* {
+    if (event is UserLoadingEvent) {
+      id = event.userID;
       FirebaseFirestore.instance
           .collection('users')
           .snapshots()
           .listen((snapshot) {
-        add(snapshot.docs);
+        add(UserLoadedEvent(snapshot.docs));
       });
     }
-    if (event != null) {
+    if (event is UserLoadedEvent) {
       List<dynamic> usersAndLastMessage = <dynamic>[];
       try {
-        for (int i = 0; i < event.length; i++) {
+        for (int i = 0; i < event.docs.length; i++) {
           String lastMessage = 'you did not start message';
-          UserModel userInList = UserModel.fromJson(event[i].data());
+          UserModel userInList = UserModel.fromJson(event.docs[i].data());
           var getLastMessage = await FirebaseFirestore.instance
               .collection('chatrooms')
               .where('id', isEqualTo: '$id-${userInList.id}')

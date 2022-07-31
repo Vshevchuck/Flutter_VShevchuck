@@ -1,12 +1,13 @@
 import 'dart:math';
 
+import 'package:assignment_5/bloc/user_bloc/user_event.dart';
 import 'package:assignment_5/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/user_state.dart';
-import '../../../bloc/users_bloc.dart';
+import '../../../bloc/user_bloc/user_state.dart';
+import '../../../bloc/user_bloc/users_bloc.dart';
 
 class CardWidget extends StatelessWidget {
   final User dataUser;
@@ -16,7 +17,7 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-    userBloc.add(dataUser.uid);
+    userBloc.add(UserLoadingEvent(dataUser.uid));
     return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
       if (state is UserLoadedState) {
         return ListView.builder(
@@ -57,10 +58,10 @@ class CardWidget extends StatelessWidget {
                   title: Column(
                     children: [
                       Text(
-                        state.loadedUsers[index][0].name,
+                        state.loadedUsers[index].first.name,
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      Text(state.loadedUsers[index][0].email,
+                      Text(state.loadedUsers[index].first.email,
                           style: const TextStyle(fontStyle: FontStyle.italic)),
                     ],
                   ),

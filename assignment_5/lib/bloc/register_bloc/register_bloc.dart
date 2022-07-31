@@ -1,9 +1,9 @@
-import 'package:assignment_5/bloc/register_state.dart';
+import 'package:assignment_5/bloc/register_bloc/register_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/user_model.dart';
+import '../../models/user_model.dart';
 
 class RegisterBloc extends Bloc<dynamic, RegisterState> {
   @override
@@ -30,27 +30,23 @@ class RegisterBloc extends Bloc<dynamic, RegisterState> {
         }
 
         yield UserRegisteredState(user!);
-      } catch (_) {
-        yield RegisterErrorState(checkRegisterError(event));
+      } catch (e) {
+        if (e is FirebaseAuthException) {
+          yield RegisterErrorState(checkRegisterError(event,e));
+        }
       }
     }
   }
-  String checkRegisterError(UserRegister user) {
-    bool checkError = false;
+  String checkRegisterError(UserRegister user,FirebaseAuthException exception) {
     if (user.password.length < 6) {
-      checkError = true;
       return ('password must be at least 6 characters');
     }
     if (user.email.isEmpty || user.password.isEmpty || user.name.isEmpty) {
-      checkError = true;
       return ('Fill in all the fields');
     }
     if (!user.email.contains('.') || !user.email.contains('@')) {
-      checkError = true;
       return ('invalid email input form , please check availability . or @');
     }
-    if (!checkError) {
-      return ("something went wrong, please login again");
-    }
+    return (exception.message.toString());
   }
 }

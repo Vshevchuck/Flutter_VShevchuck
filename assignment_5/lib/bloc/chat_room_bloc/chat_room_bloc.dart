@@ -12,17 +12,7 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
     bool newRoom = true;
     String id = '';
     if (event.runtimeType == List<String>) {
-      addChat(event);
-      FirebaseFirestore.instance
-          .collection('chatrooms')
-          .snapshots()
-          .listen((snapshot) {
-        for (int i = 0; i < snapshot.docs.length; i++) {
-          if (snapshot.docs[i].get('id') == '${event.first}-${event[1]}') {
-            id = snapshot.docs[i].id;
-          }
-        }
-      });
+      id= await addChat(event);
       FirebaseFirestore.instance
           .collection('users')
           .snapshots()
@@ -60,15 +50,11 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
 
   void findUserChatRooms(String loginedUserId, String secondUserId) {
     FirebaseFirestore.instance
-        .collection('users')
+        .collection('users').where('id',isEqualTo: loginedUserId)
         .snapshots()
         .listen((snapshot) {
-      for (int i = 0; i < snapshot.docs.length; i++) {
-        if (snapshot.docs[i].get('id') == loginedUserId) {
-          add([snapshot.docs[i].get('chatrooms'), secondUserId]);
-        }
-      }
-    });
+          add([snapshot.docs[0].get('chatrooms'), secondUserId]);
+      });
   }
 
   void addChatToUser(String id, String secondUser,
@@ -82,8 +68,9 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
         .set({'chatrooms': chatrooms}, SetOptions(merge: true));
   }
 
-  void addChat(List<String> users) {
-    FirebaseFirestore.instance.collection('chatrooms').add({
+  Future<String> addChat(List<String> users)async {
+    String id='';
+    await FirebaseFirestore.instance.collection('chatrooms').add({
       'id_first_user': users.first,
       'id_second_user': users[1],
       'id': '${users.first}-${users[1]}',
@@ -91,6 +78,9 @@ class ChatRoomBloc extends Bloc<dynamic, ChatRoomState> {
         {'admin': 'start the dialog'}
       ],
       'lastMessage' : ''
-    });
+    }).then((value) =>((id=value.id)));
+    print(id);
+    return id;
+
   }
 }

@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/chat_bloc.dart';
-import '../../../bloc/chat_state.dart';
+import '../../../bloc/chat_bloc/chat_bloc.dart';
+import '../../../bloc/chat_bloc/chat_state.dart';
 import 'message_widget.dart';
 
 class ChatGetListWidget extends StatelessWidget {

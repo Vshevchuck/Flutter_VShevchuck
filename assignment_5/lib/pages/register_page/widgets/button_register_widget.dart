@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/register_bloc.dart';
-import '../../../bloc/register_state.dart';
+import '../../../bloc/register_bloc/register_bloc.dart';
+import '../../../bloc/register_bloc/register_state.dart';
 import '../../../models/user_model.dart';
 import '../../login_page/login_page.dart';
 

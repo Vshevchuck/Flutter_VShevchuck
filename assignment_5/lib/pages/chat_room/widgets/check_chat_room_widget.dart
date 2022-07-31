@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/chat_room_bloc.dart';
-import '../../../bloc/chat_room_state.dart';
+import '../../../bloc/chat_room_bloc/chat_room_bloc.dart';
+import '../../../bloc/chat_room_bloc/chat_room_state.dart';
 import 'chat_widget.dart';
 
 class CheckChatRoomWidget extends StatelessWidget {

@@ -4,8 +4,8 @@ import 'package:assignment_5/pages/login_page/widgets/dialog_builder_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/login_bloc.dart';
-import '../../../bloc/login_state.dart';
+import '../../../bloc/login_bloc/login_bloc.dart';
+import '../../../bloc/login_bloc/login_state.dart';
 import '../../../models/user_model.dart';
 import '../login_page.dart';
 

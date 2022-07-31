@@ -1,4 +1,4 @@
-import 'package:assignment_5/bloc/register_bloc.dart';
+import 'package:assignment_5/bloc/register_bloc/register_bloc.dart';
 import 'package:assignment_5/pages/register_page/widgets/button_register_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
