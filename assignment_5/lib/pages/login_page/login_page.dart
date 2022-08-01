@@ -1,4 +1,6 @@
+import 'package:assignment_5/generated/locale_keys.g.dart';
 import 'package:assignment_5/pages/login_page/widgets/sign_in_button_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,10 +26,7 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   void didChangeDependencies() {
-    Object? checkLogOut = ModalRoute
-        .of(context)
-        ?.settings
-        .arguments;
+    Object? checkLogOut = ModalRoute.of(context)?.settings.arguments;
     if (checkLogOut != null) {
       logOut();
       checkLogOut = null;
@@ -37,31 +36,45 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    var screenHeight = (MediaQuery
-        .of(context)
-        .size
-        .height);
+    var screenHeight = (MediaQuery.of(context).size.height);
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(),
       child: SafeArea(
         child: Scaffold(
-          appBar: AppBar(title: const Text('Authorization')),
+          appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  if (context.locale == Locale('en')) {
+                    try{
+                      context.setLocale(const Locale.fromSubtags(languageCode:'ru'));
+                     // context.setLocale(Locale('ua'));
+                    }catch(e){
+                      print(e);
+                    }
+                  }
+                  else if (context.locale == const Locale.fromSubtags(languageCode:'ru')) {
+                    context.setLocale(Locale('en'));
+                  }
+                },
+                icon: const Icon(Icons.language),
+              ),
+              title: Text(LocaleKeys.Authorization.tr())),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
                 SizedBox(height: screenHeight / 4.5),
-                const Text("Login",
+                Text(LocaleKeys.Login.tr(),
                     style: TextStyle(fontSize: 25, color: Colors.black)),
                 TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(hintText: 'email'),
+                  decoration: InputDecoration(hintText: LocaleKeys.Email.tr()),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                     obscureText: true,
                     controller: passwordController,
-                    decoration: const InputDecoration(hintText: 'password')),
+                    decoration: InputDecoration(hintText: LocaleKeys.Password.tr())),
                 const SizedBox(height: 8.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,7 +86,7 @@ class LoginPageState extends State<LoginPage> {
                               .pushReplacementNamed('/register');
                           setState(() {});
                         },
-                        child: const Text('Sign Up')),
+                        child: Text(LocaleKeys.Sign_Up.tr())),
                   ],
                 )
               ],
@@ -89,4 +102,3 @@ class LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 }
-

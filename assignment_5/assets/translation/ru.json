@@ -1,0 +1,17 @@
+{
+  "Authorization": "Авторизація",
+  "Login": "Логін",
+  "Email": "електрона пошта",
+  "Password": "пароль",
+  "Sign_In": "Увійти",
+  "Sign_Up": "Зареєструватися",
+  "Name": "Ім'я",
+  "Register": "Реєструватися",
+  "Update": "Оновити",
+  "Log_Out": "Вийти",
+  "Go_Back": "Повернутись назад",
+  "Start_the_dialog":"Діалог розпочато",
+  "You_did_not_start_dialog": "Ви ще не почали діалог",
+  "Create_dialog" : "Розпочати діалог",
+  "You_have_not_started_a_dialog_with_this_user_yet": "Ви ще не розпочинали діалог з цим користувачем"
+}

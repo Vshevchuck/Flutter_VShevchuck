@@ -1,7 +1,9 @@
 import 'package:assignment_5/bloc/chat_room_bloc/chat_room_event.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../generated/locale_keys.g.dart';
 import 'chat_room_state.dart';
 
 class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
@@ -74,7 +76,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       'id_second_user': users[1],
       'id': '${users.first}-${users[1]}',
       'chat': [
-        {'admin': 'start the dialog'}
+        {'admin': LocaleKeys.Start_the_dialog.tr()}
       ],
       'lastMessage': ''
     }).then((value) => ((id = value.id)));

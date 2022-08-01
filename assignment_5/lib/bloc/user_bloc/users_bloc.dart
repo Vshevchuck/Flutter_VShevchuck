@@ -1,7 +1,9 @@
 import 'package:assignment_5/bloc/user_bloc/user_event.dart';
 import 'package:assignment_5/bloc/user_bloc/user_state.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../generated/locale_keys.g.dart';
 import '../../models/user_model.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
@@ -24,7 +26,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       List<dynamic> usersAndLastMessage = <dynamic>[];
       try {
         for (int i = 0; i < event.docs.length; i++) {
-          String lastMessage = 'you did not start message';
+          String lastMessage = LocaleKeys.You_did_not_start_dialog.tr();
           UserModel userInList = UserModel.fromJson(event.docs[i].data());
           var getLastMessage = await FirebaseFirestore.instance
               .collection('chatrooms')
@@ -47,5 +49,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       } catch (_) {}
     }
   }
+  //Stream checkFir
 
 }

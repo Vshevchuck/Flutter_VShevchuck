@@ -1,8 +1,10 @@
 import 'package:assignment_5/bloc/register_bloc/register_bloc.dart';
 import 'package:assignment_5/pages/register_page/widgets/button_register_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../generated/locale_keys.g.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -19,25 +21,26 @@ class RegisterPage extends StatelessWidget {
       child: SafeArea(
           child: Scaffold(
         appBar: AppBar(
-          title: const Text('Authorization'),
+          title: Text(LocaleKeys.Authorization.tr()),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               SizedBox(height: screenHeight / 5.0),
-              const Text("Register",
+              Text(LocaleKeys.Register.tr(),
                   style: TextStyle(fontSize: 25, color: Colors.black)),
               TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(hintText: 'name')),
+                  decoration: InputDecoration(hintText: LocaleKeys.Name.tr())),
               TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(hintText: 'email')),
+                  decoration: InputDecoration(hintText: LocaleKeys.Email.tr())),
               TextField(
                   obscureText: true,
                   controller: passwordController,
-                  decoration: const InputDecoration(hintText: 'password')),
+                  decoration:
+                      InputDecoration(hintText: LocaleKeys.Password.tr())),
               const SizedBox(height: 8.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -48,7 +51,7 @@ class RegisterPage extends StatelessWidget {
                         Navigator.of(context)
                             .pushReplacementNamed('/login', arguments: null);
                       },
-                      child: const Text('Go back'))
+                      child: Text(LocaleKeys.Go_Back.tr()))
                 ],
               )
             ],

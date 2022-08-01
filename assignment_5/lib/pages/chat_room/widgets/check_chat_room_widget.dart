@@ -1,9 +1,11 @@
 import 'package:assignment_5/bloc/chat_room_bloc/chat_room_event.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/chat_room_bloc/chat_room_bloc.dart';
 import '../../../bloc/chat_room_bloc/chat_room_state.dart';
+import '../../../generated/locale_keys.g.dart';
 import 'chat_widget.dart';
 
 class CheckChatRoomWidget extends StatelessWidget {
@@ -21,9 +23,10 @@ class CheckChatRoomWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Center(
-                child: Text(
-                  'You have not started a dialog with this user yet',
+               FittedBox(
+                 fit: BoxFit.fitWidth,
+                 alignment: Alignment.center,
+                child: Text(LocaleKeys.You_have_not_started_a_dialog_with_this_user_yet.tr(),
                   style: TextStyle(fontSize: 18, color: Colors.black54),
                 ),
               ),
@@ -32,7 +35,7 @@ class CheckChatRoomWidget extends StatelessWidget {
                    chatRoomBloc
                         .add(CreateChatRoomEvent([users[1].uid.toString(), users.first.id.toString()]));
                   },
-                  child: const Text('Create dialog')),
+                  child: Text(LocaleKeys.Create_dialog.tr())),
             ],
           ),
         );

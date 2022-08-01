@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:assignment_5/pages/login_page/widgets/dialog_builder_widget.dart';
 import 'package:assignment_5/pages/register_page/register_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/register_bloc/register_bloc.dart';
 import '../../../bloc/register_bloc/register_state.dart';
+import '../../../generated/locale_keys.g.dart';
 import '../../../models/user_model.dart';
 import '../../login_page/login_page.dart';
 
@@ -45,7 +47,7 @@ class ButtonRegisterWidget extends StatelessWidget {
               RegisterPage.passwordController.text = "";
               RegisterPage.nameController.text = "";
             },
-            child: const Text('Register'));
+            child: Text(LocaleKeys.Sign_Up.tr()));
       },
     );
   }
