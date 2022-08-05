@@ -30,11 +30,6 @@ class _MainPageState extends State<MainPage> {
             Expanded(child: Text('${dataUser.email}')),
             ElevatedButton(
                 onPressed: () {
-                  setState((){});
-                },
-                child: Text(LocaleKeys.Update.tr())),
-            ElevatedButton(
-                onPressed: () {
                   Navigator.pushReplacementNamed(context, '/login',
                       arguments: true);
                 },
@@ -48,4 +43,3 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
-

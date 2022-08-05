@@ -1,4 +1,7 @@
+import 'package:assignment_5/util/colors/colors_style.dart';
 import 'package:flutter/material.dart';
+
+import '../../../util/text_styles/text_styles.dart';
 
 class MessageWidget extends StatelessWidget {
   final String userId;
@@ -6,7 +9,10 @@ class MessageWidget extends StatelessWidget {
   final String message;
 
   const MessageWidget(
-      {Key? key, required this.userId, required this.auth, required this.message})
+      {Key? key,
+      required this.userId,
+      required this.auth,
+      required this.message})
       : super(key: key);
 
   @override
@@ -14,35 +20,28 @@ class MessageWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Align(
-        alignment: auth == userId
-            ? Alignment.topRight
-            : Alignment.topLeft,
+        alignment: auth == userId ? Alignment.topRight : Alignment.topLeft,
         child: FittedBox(
           clipBehavior: Clip.hardEdge,
           child: Container(
-              alignment: auth == userId
-                  ? Alignment.topRight
-                  : Alignment.topLeft,
+              alignment:
+                  auth == userId ? Alignment.topRight : Alignment.topLeft,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color:
-                auth == userId ? Colors.blue : Colors.grey,
-              ),
+                  borderRadius: BorderRadius.circular(10),
+                  color: auth == userId
+                      ? ColorStyle.ourMessageColor
+                      : ColorStyle.messageColor),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                    constraints:
-                    const BoxConstraints(maxWidth: 250),
+                    constraints: const BoxConstraints(maxWidth: 250),
                     child: Text(
                         softWrap: true,
                         message,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15))),
+                        style: TextStyles.messageTextStyle)),
               )),
         ),
       ),
     );
   }
 }
-

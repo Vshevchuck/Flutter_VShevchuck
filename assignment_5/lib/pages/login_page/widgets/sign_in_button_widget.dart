@@ -16,6 +16,7 @@ class SignInButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.locale;
     final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     BlocProvider.of<LoginBloc>(context).initialState;
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
@@ -29,7 +30,7 @@ class SignInButtonWidget extends StatelessWidget {
         loginBloc.add('initial');
         LoginPageState.message = state.message;
         scheduleMicrotask(
-            () => Navigator.of(context).restorablePush(showMessage.dialogBuilderWidget));
+            () => Navigator.of(context).restorablePush(ShowMessage.dialogBuilderWidget));
       }
       return Column(
         children: [

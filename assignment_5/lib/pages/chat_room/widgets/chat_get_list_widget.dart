@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:assignment_5/util/colors/colors_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,8 +27,7 @@ class ChatGetListWidget extends StatelessWidget {
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
       if (state is ChatListState) {
         if (_scrollController.hasClients) {
-          scheduleMicrotask(() =>
-          (_scrollController
+          scheduleMicrotask(() => (_scrollController
               .jumpTo(_scrollController.position.minScrollExtent)));
         }
         return Column(
@@ -47,14 +47,17 @@ class ChatGetListWidget extends StatelessWidget {
                       message = item.value;
                       auth = item.key;
                     }
-                    return MessageWidget(userId: userId, auth: auth, message: message);
+                    return MessageWidget(
+                        userId: userId, auth: auth, message: message);
                   }),
             ),
             Container(
               decoration: const BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: Colors.grey, width: 1.5),
-                  )),
+                top: BorderSide(
+                    color: ColorStyle.sendMessageContainerBorderColor,
+                    width: 1.5),
+              )),
               child: Row(
                 children: [
                   Expanded(
@@ -85,4 +88,3 @@ class ChatGetListWidget extends StatelessWidget {
     });
   }
 }
-

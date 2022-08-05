@@ -19,7 +19,7 @@ dependencies:
   easy_localization: ^3.0.1
 
 dev_dependencies:
-  cloud_firestore:
+  cloud_firestore: 3.1.18
   flutter_test:
     sdk: flutter
 

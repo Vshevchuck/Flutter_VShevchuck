@@ -13,7 +13,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   @override
   Stream<ChatState> mapEventToState(ChatEvent event) async* {
-    bool sendList = false;
     if (event is GetChatId) {
       try {
         FirebaseFirestore.instance
@@ -38,7 +37,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         for (var item in messageAuth.entries) {
           message = item.value;
         }
-        sendList = true;
         FirebaseFirestore.instance
             .collection('chatrooms')
             .doc(event.idChatAndMessage.first)
@@ -52,9 +50,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         var reversed = chatUpdate.reversed.toList();
         yield ChatListState(reversed);
       }
-    } catch (_) {
-      print('+');
-    }
+    } catch (_) {}
     if (event is GetReversedChat) {
       var reversed = event.chat.reversed.toList();
       yield ChatListState(reversed);

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../login_page.dart';
 
-class showMessage{
+class ShowMessage{
   static Route<Object?> dialogBuilderWidget(BuildContext context,
       Object? arguments) {
     return DialogRoute<void>(
@@ -16,7 +16,7 @@ class showMessage{
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('ok'))
+                  child: const Text('ok'))
             ],
           ),
     );

@@ -34,7 +34,7 @@ class ButtonRegisterWidget extends StatelessWidget {
           registerBloc.add('initial');
           LoginPageState.message = state.message;
           scheduleMicrotask(
-                  () => {Navigator.of(context).restorablePush(showMessage.dialogBuilderWidget)});
+                  () => {Navigator.of(context).restorablePush(ShowMessage.dialogBuilderWidget)});
         }
         return ElevatedButton(
             onPressed: () {

@@ -1,13 +1,13 @@
-import 'dart:math';
-
 import 'package:assignment_5/bloc/user_bloc/user_event.dart';
 import 'package:assignment_5/models/user_model.dart';
+import 'package:assignment_5/util/colors/colors_style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/user_bloc/user_state.dart';
 import '../../../bloc/user_bloc/users_bloc.dart';
+import '../../../util/text_styles/text_styles.dart';
 
 class CardWidget extends StatelessWidget {
   final User dataUser;
@@ -30,43 +30,46 @@ class CardWidget extends StatelessWidget {
                   child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: index.isEven ? Colors.blue[50] : Colors.white54,
+                  color: index.isEven
+                      ? ColorStyle.EvenBorderColor
+                      : ColorStyle.NotEvenBorderColor,
                 ),
                 child: ListTile(
-                  tileColor: index.isEven ? Colors.amber[50] : Colors.white,
+                  tileColor: index.isEven
+                      ? ColorStyle.EvenUserColor
+                      : ColorStyle.NotEvenUserColor,
                   onTap: () {
-                    Navigator.of(context).pushNamed('/chatroom',
-                        arguments: [state.loadedUsers[index][0] as UserModel , dataUser]);
+                    Navigator.of(context).pushNamed('/chatroom', arguments: [
+                      state.loadedUsers[index].first as UserModel,
+                      dataUser
+                    ]);
                   },
                   leading: Container(
                       height: 50,
                       width: 50,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(90),
-                        color: Color(
-                                (Random().nextDouble() * 0xFFFFFF).toInt() << 0)
-                            .withOpacity(1.0),
+                        color: index.isEven
+                            ? ColorStyle.EvenAvatarColor
+                            : ColorStyle.NotEvenAvatarColor,
                       ),
                       child: Center(
                           child: Text(
-                        state.loadedUsers[index][0].name[0],
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
+                        state.loadedUsers[index].first.name[0],
+                        style: TextStyles.firstLetterOfNameTextStyle,
                       ))),
                   title: Column(
                     children: [
                       Text(
                         state.loadedUsers[index].first.name,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyles.nameTextStyle,
                       ),
                       Text(state.loadedUsers[index].first.email,
-                          style: const TextStyle(fontStyle: FontStyle.italic)),
+                          style: TextStyles.emailTextStyle),
                     ],
                   ),
                   subtitle: Text(state.loadedUsers[index][1],
-                      style: const TextStyle(fontStyle: FontStyle.italic)),
+                      style: TextStyles.lastMessageTextStyle),
                 ),
               )),
             );

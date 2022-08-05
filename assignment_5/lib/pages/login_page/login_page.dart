@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/login_bloc/login_bloc.dart';
+import '../../util/text_styles/text_styles.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,17 +21,7 @@ class LoginPageState extends State<LoginPage> {
   static final passwordController = TextEditingController();
 
   @override
-  initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
-    Object? checkLogOut = ModalRoute.of(context)?.settings.arguments;
-    if (checkLogOut != null) {
-      logOut();
-      checkLogOut = null;
-    }
     super.didChangeDependencies();
   }
 
@@ -43,53 +34,43 @@ class LoginPageState extends State<LoginPage> {
         child: Scaffold(
           appBar: AppBar(
               leading: IconButton(
-                onPressed: () {
-                  if (context.locale == Locale('en')) {
-                    try{
-                      context.setLocale(const Locale.fromSubtags(languageCode:'ru'));
-                     // context.setLocale(Locale('ua'));
-                    }catch(e){
-                      print(e);
-                    }
-                  }
-                  else if (context.locale == const Locale.fromSubtags(languageCode:'ru')) {
-                    context.setLocale(Locale('en'));
-                  }
-                },
+                onPressed: changeLanguage,
                 icon: const Icon(Icons.language),
               ),
               title: Text(LocaleKeys.Authorization.tr())),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                SizedBox(height: screenHeight / 4.5),
-                Text(LocaleKeys.Login.tr(),
-                    style: TextStyle(fontSize: 25, color: Colors.black)),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(hintText: LocaleKeys.Email.tr()),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                    obscureText: true,
-                    controller: passwordController,
-                    decoration: InputDecoration(hintText: LocaleKeys.Password.tr())),
-                const SizedBox(height: 8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SignInButtonWidget(),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushReplacementNamed('/register');
-                          setState(() {});
-                        },
-                        child: Text(LocaleKeys.Sign_Up.tr())),
-                  ],
-                )
-              ],
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  SizedBox(height: screenHeight / 4.5),
+                  Text(LocaleKeys.Login.tr(), style: TextStyles.loginTextStyle),
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(hintText: LocaleKeys.Email.tr()),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                      obscureText: true,
+                      controller: passwordController,
+                      decoration:
+                          InputDecoration(hintText: LocaleKeys.Password.tr())),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const SignInButtonWidget(),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushReplacementNamed('/register');
+                            setState(() {});
+                          },
+                          child: Text(LocaleKeys.Sign_Up.tr())),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -97,8 +78,11 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  void logOut() async {
-    await FirebaseAuth.instance.signOut();
-    setState(() {});
+  void changeLanguage() {
+    if (context.locale == const Locale('en')) {
+      context.setLocale(const Locale.fromSubtags(languageCode:'ru'));
+    } else if (context.locale == const Locale('ru')) {
+      context.setLocale(const Locale('en'));
+    }
   }
 }

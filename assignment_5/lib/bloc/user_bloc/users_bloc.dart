@@ -22,6 +22,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         add(UserLoadedEvent(snapshot.docs));
       });
     }
+    updateLastMessage();
     if (event is UserLoadedEvent) {
       List<dynamic> usersAndLastMessage = <dynamic>[];
       try {
@@ -49,6 +50,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       } catch (_) {}
     }
   }
-  //Stream checkFir
-
+  void updateLastMessage(){
+    FirebaseFirestore.instance
+        .collection('chatrooms').where('lastMessage',arrayContains: id)
+        .snapshots()
+        .listen((snapshot) {add(UserLoadingEvent(id));});
+  }
 }

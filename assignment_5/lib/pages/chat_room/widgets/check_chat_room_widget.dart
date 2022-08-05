@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/chat_room_bloc/chat_room_bloc.dart';
 import '../../../bloc/chat_room_bloc/chat_room_state.dart';
 import '../../../generated/locale_keys.g.dart';
+import '../../../util/text_styles/text_styles.dart';
 import 'chat_widget.dart';
 
 class CheckChatRoomWidget extends StatelessWidget {
@@ -27,7 +28,7 @@ class CheckChatRoomWidget extends StatelessWidget {
                  fit: BoxFit.fitWidth,
                  alignment: Alignment.center,
                 child: Text(LocaleKeys.You_have_not_started_a_dialog_with_this_user_yet.tr(),
-                  style: TextStyle(fontSize: 18, color: Colors.black54),
+                  style: TextStyles.messageStartDialogTextStyle,
                 ),
               ),
               ElevatedButton(
