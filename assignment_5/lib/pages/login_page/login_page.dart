@@ -22,6 +22,12 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   void didChangeDependencies() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      Future.delayed(Duration.zero, () {
+        Navigator.of(context).pushReplacementNamed('/main',
+            arguments: FirebaseAuth.instance.currentUser);
+      });
+    }
     super.didChangeDependencies();
   }
 
@@ -43,24 +49,30 @@ class LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  SizedBox(height: screenHeight / 4.5),
+                  SizedBox(height: screenHeight / 5.3),
                   Text(LocaleKeys.Login.tr(), style: TextStyles.loginTextStyle),
+                  const SizedBox(height: 26),
                   TextField(
                     controller: emailController,
-                    decoration: InputDecoration(hintText: LocaleKeys.Email.tr()),
+                    decoration: InputDecoration(
+                        hintText: LocaleKeys.Email.tr(),
+                        suffixIcon: const Icon(Icons.alternate_email)),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   TextField(
                       obscureText: true,
                       controller: passwordController,
-                      decoration:
-                          InputDecoration(hintText: LocaleKeys.Password.tr())),
+                      decoration: InputDecoration(
+                          hintText: LocaleKeys.Password.tr(),
+                          suffixIcon: const Icon(Icons.password))),
                   const SizedBox(height: 8.0),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      const SizedBox(height: 16,),
                       const SignInButtonWidget(),
-                      ElevatedButton(
+                      const SizedBox(height: 16,),
+                      TextButton(
                           onPressed: () {
                             Navigator.of(context)
                                 .pushReplacementNamed('/register');
@@ -80,7 +92,7 @@ class LoginPageState extends State<LoginPage> {
 
   void changeLanguage() {
     if (context.locale == const Locale('en')) {
-      context.setLocale(const Locale.fromSubtags(languageCode:'ru'));
+      context.setLocale(const Locale.fromSubtags(languageCode: 'ru'));
     } else if (context.locale == const Locale('ru')) {
       context.setLocale(const Locale('en'));
     }

@@ -53,6 +53,7 @@ class ChatGetListWidget extends StatelessWidget {
             ),
             Container(
               decoration: const BoxDecoration(
+                color: Colors.white,
                   border: Border(
                 top: BorderSide(
                     color: ColorStyle.sendMessageContainerBorderColor,

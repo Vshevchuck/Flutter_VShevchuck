@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/user_model.dart';
+import '../user_bloc/user_state.dart';
 
 class LoginBloc extends Bloc<dynamic, LoginState> {
   UserLogin userLogin = UserLogin('Empty', 'Empty');
@@ -26,7 +27,6 @@ class LoginBloc extends Bloc<dynamic, LoginState> {
         if (e is FirebaseAuthException) {
           yield LoginErrorState(checkLoginError(event,e));
         }
-
       }
     }
   }

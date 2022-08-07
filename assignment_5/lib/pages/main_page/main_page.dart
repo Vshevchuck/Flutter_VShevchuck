@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:assignment_5/generated/locale_keys.g.dart';
 import 'package:assignment_5/pages/main_page/widgets/card_widget.dart';
+import 'package:assignment_5/pages/main_page/widgets/log_out.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,12 +29,7 @@ class _MainPageState extends State<MainPage> {
             title: Row(
           children: [
             Expanded(child: Text('${dataUser.email}')),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/login',
-                      arguments: true);
-                },
-                child: Text(LocaleKeys.Log_Out.tr()))
+            const LogOut(),
           ],
         )),
         body: CardWidget(

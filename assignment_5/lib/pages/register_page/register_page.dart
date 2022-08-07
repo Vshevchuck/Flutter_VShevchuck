@@ -29,26 +29,34 @@ class RegisterPage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SizedBox(height: screenHeight / 5.0),
+                SizedBox(height: screenHeight / 5.5),
                 Text(LocaleKeys.Register.tr(),
                     style: TextStyles.registerTextStyle),
+                const SizedBox(height: 26),
                 TextField(
                     controller: nameController,
-                    decoration: InputDecoration(hintText: LocaleKeys.Name.tr())),
+                    decoration: InputDecoration(
+                        hintText: LocaleKeys.Name.tr(),
+                        suffixIcon: const Icon(Icons.account_circle_rounded))),
                 TextField(
                     controller: emailController,
-                    decoration: InputDecoration(hintText: LocaleKeys.Email.tr())),
+                    decoration: InputDecoration(
+                        hintText: LocaleKeys.Email.tr(),
+                        suffixIcon: const Icon(Icons.alternate_email))),
                 TextField(
                     obscureText: true,
                     controller: passwordController,
-                    decoration:
-                        InputDecoration(hintText: LocaleKeys.Password.tr())),
+                    decoration: InputDecoration(
+                        hintText: LocaleKeys.Password.tr(),
+                        suffixIcon: const Icon(Icons.password))),
                 const SizedBox(height: 8.0),
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    const SizedBox(height: 16,),
                     const ButtonRegisterWidget(),
-                    ElevatedButton(
+                    const SizedBox(height: 16,),
+                    TextButton(
                         onPressed: () {
                           Navigator.of(context)
                               .pushReplacementNamed('/login', arguments: null);

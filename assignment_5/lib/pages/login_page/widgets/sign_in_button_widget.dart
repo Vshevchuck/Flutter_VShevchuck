@@ -29,12 +29,24 @@ class SignInButtonWidget extends StatelessWidget {
       if (state is LoginErrorState) {
         loginBloc.add('initial');
         LoginPageState.message = state.message;
-        scheduleMicrotask(
-            () => Navigator.of(context).restorablePush(ShowMessage.dialogBuilderWidget));
+        scheduleMicrotask(() => Navigator.of(context)
+            .restorablePush(ShowMessage.dialogBuilderWidget));
       }
-      return Column(
-        children: [
-          ElevatedButton(
+      return Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.0),
+            gradient: const LinearGradient(
+              begin: Alignment(-0.95, 0.0),
+              end: Alignment(1.0, 0.0),
+              colors: [Color(0xff667eea), Color(0xff64b6ff)],
+              stops: [0.0, 1.0],
+            )),
+        child: SizedBox(
+          width: 300,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.transparent,
+              onSurface: Colors.transparent,
+              shadowColor: Colors.transparent,),
             onPressed: () async {
               UserLogin userModel = UserLogin(
                   LoginPageState.emailController.text,
@@ -45,7 +57,7 @@ class SignInButtonWidget extends StatelessWidget {
             },
             child: Text(LocaleKeys.Sign_In.tr()),
           ),
-        ],
+        ),
       );
     });
   }

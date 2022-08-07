@@ -1,6 +1,7 @@
 import 'package:assignment_5/bloc/user_bloc/user_event.dart';
 import 'package:assignment_5/bloc/user_bloc/user_state.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../generated/locale_keys.g.dart';
@@ -10,9 +11,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   @override
   get initialState => UserLoadingState();
   String id = '';
+  bool timeUpdate = true;
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
+    if (event is UserLogOutEvent) {
+      await FirebaseAuth.instance.signOut();
+      yield UserLogOutState();
+    }
     if (event is UserLoadingEvent) {
       id = event.userID;
       FirebaseFirestore.instance
@@ -22,7 +28,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         add(UserLoadedEvent(snapshot.docs));
       });
     }
-    updateLastMessage();
+    if (timeUpdate) {
+      timeUpdate=false;
+      Future.delayed(const Duration(seconds: 5), () {
+        updateLastMessage();
+        timeUpdate=true;
+      });
+    }
     if (event is UserLoadedEvent) {
       List<dynamic> usersAndLastMessage = <dynamic>[];
       try {
@@ -50,10 +62,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       } catch (_) {}
     }
   }
-  void updateLastMessage(){
+
+  void updateLastMessage() {
     FirebaseFirestore.instance
-        .collection('chatrooms').where('lastMessage',arrayContains: id)
+        .collection('chatrooms')
+        .where('lastMessage', arrayContains: id)
         .snapshots()
-        .listen((snapshot) {add(UserLoadingEvent(id));});
+        .listen((snapshot) {
+      add(UserLoadingEvent(id));
+    });
   }
 }
