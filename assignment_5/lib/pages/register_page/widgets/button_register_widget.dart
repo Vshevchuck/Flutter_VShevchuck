@@ -11,6 +11,7 @@ import '../../../bloc/register_bloc/register_bloc.dart';
 import '../../../bloc/register_bloc/register_state.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../../models/user_model.dart';
+import '../../../util/decorations/decorations.dart';
 import '../../login_page/login_page.dart';
 
 class ButtonRegisterWidget extends StatelessWidget {
@@ -39,20 +40,15 @@ class ButtonRegisterWidget extends StatelessWidget {
               });
         }
         return Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6.0),
-                gradient: const LinearGradient(
-                  begin: Alignment(-0.95, 0.0),
-                  end: Alignment(1.0, 0.0),
-                  colors: [Color(0xff667eea), Color(0xff64b6ff)],
-                  stops: [0.0, 1.0],
-                )),
+            decoration: Decorations.buttonDecoration,
             child: SizedBox(
                 width: 300,
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.transparent,
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.transparent,
                       onSurface: Colors.transparent,
-                      shadowColor: Colors.transparent,),
+                      shadowColor: Colors.transparent,
+                    ),
                     onPressed: () {
                       UserRegister userModel = UserRegister(
                           RegisterPage.nameController.text,

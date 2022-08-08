@@ -1,6 +1,5 @@
 import 'package:assignment_5/bloc/chat_room_bloc/chat_room_event.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../generated/locale_keys.g.dart';

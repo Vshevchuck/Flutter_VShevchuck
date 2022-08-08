@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/chat_room_bloc/chat_room_bloc.dart';
+import '../../util/decorations/decorations.dart';
 
 class ChatRoomPage extends StatelessWidget {
   const ChatRoomPage({Key? key}) : super(key: key);
@@ -14,12 +15,7 @@ class ChatRoomPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(title: Text(users.first.email)),
           body:Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.indigoAccent, Colors.white,Colors.white])
-              ),
+              decoration: Decorations.backgroundChatRoomDecoration,
             child: BlocProvider<ChatRoomBloc>(
               create: (context) => ChatRoomBloc(),
               child: CheckChatRoomWidget(users: users),

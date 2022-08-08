@@ -1,5 +1,6 @@
 import 'package:assignment_5/bloc/user_bloc/user_event.dart';
 import 'package:assignment_5/models/user_model.dart';
+import 'package:assignment_5/pages/main_page/widgets/user_info_widget.dart';
 import 'package:assignment_5/util/colors/colors_style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -58,16 +59,9 @@ class CardWidget extends StatelessWidget {
                         state.loadedUsers[index].first.name[0],
                         style: TextStyles.firstLetterOfNameTextStyle,
                       ))),
-                  title: Column(
-                    children: [
-                      Text(
-                        state.loadedUsers[index].first.name,
-                        style: TextStyles.nameTextStyle,
-                      ),
-                      Text(state.loadedUsers[index].first.email,
-                          style: TextStyles.emailTextStyle),
-                      const SizedBox(height: 6)
-                    ],
+                  title: UserInfoWidget(
+                    name: state.loadedUsers[index].first.name,
+                    email: state.loadedUsers[index].first.email,
                   ),
                   subtitle: Text(
                     state.loadedUsers[index][1],

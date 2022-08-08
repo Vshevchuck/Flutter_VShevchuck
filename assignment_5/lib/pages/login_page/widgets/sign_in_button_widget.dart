@@ -9,6 +9,7 @@ import '../../../bloc/login_bloc/login_bloc.dart';
 import '../../../bloc/login_bloc/login_state.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../../models/user_model.dart';
+import '../../../util/decorations/decorations.dart';
 import '../login_page.dart';
 
 class SignInButtonWidget extends StatelessWidget {
@@ -33,14 +34,7 @@ class SignInButtonWidget extends StatelessWidget {
             .restorablePush(ShowMessage.dialogBuilderWidget));
       }
       return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6.0),
-            gradient: const LinearGradient(
-              begin: Alignment(-0.95, 0.0),
-              end: Alignment(1.0, 0.0),
-              colors: [Color(0xff667eea), Color(0xff64b6ff)],
-              stops: [0.0, 1.0],
-            )),
+        decoration: Decorations.buttonDecoration,
         child: SizedBox(
           width: 300,
           child: ElevatedButton(

@@ -1,5 +1,6 @@
 import 'package:assignment_5/bloc/register_bloc/register_bloc.dart';
 import 'package:assignment_5/pages/register_page/widgets/button_register_widget.dart';
+import 'package:assignment_5/pages/register_page/widgets/text_fields_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,33 +30,23 @@ class RegisterPage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SizedBox(height: screenHeight / 5.5),
+                SizedBox(height: screenHeight / 5.8),
                 Text(LocaleKeys.Register.tr(),
                     style: TextStyles.registerTextStyle),
-                const SizedBox(height: 26),
-                TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                        hintText: LocaleKeys.Name.tr(),
-                        suffixIcon: const Icon(Icons.account_circle_rounded))),
-                TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                        hintText: LocaleKeys.Email.tr(),
-                        suffixIcon: const Icon(Icons.alternate_email))),
-                TextField(
-                    obscureText: true,
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                        hintText: LocaleKeys.Password.tr(),
-                        suffixIcon: const Icon(Icons.password))),
-                const SizedBox(height: 8.0),
+                TextFieldsWidget(
+                    nameController: nameController,
+                    emailController: emailController,
+                    passwordController: passwordController),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const SizedBox(height: 16,),
+                    const SizedBox(
+                      height: 16,
+                    ),
                     const ButtonRegisterWidget(),
-                    const SizedBox(height: 16,),
+                    const SizedBox(
+                      height: 16,
+                    ),
                     TextButton(
                         onPressed: () {
                           Navigator.of(context)

@@ -10,4 +10,5 @@ abstract class ColorStyle{
   static const NotEvenUserColor = Colors.white;
   static final EvenAvatarColor = Colors.amber[700];
   static final NotEvenAvatarColor = Colors.blue[300];
+  static const LogOutButtonColor = Colors.white;
 }

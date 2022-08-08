@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:assignment_5/bloc/chat_room_bloc/chat_room_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -22,38 +19,42 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             .listen((snapshot) {
           add(GetReversedChat(snapshot.data()!['chat']));
         });
-      } catch (_) {}
+      } catch (e) {
+        print(e);
+      }
     }
     try {
-      String message = '';
       if (event is SendMessage) {
-        var document = await FirebaseFirestore.instance
-            .collection('chatrooms')
-            .doc(event.idChatAndMessage.first)
-            .get();
-        List<dynamic> chat = document.data()?['chat'];
-        chat.add(event.idChatAndMessage[1]);
-        var messageAuth = event.idChatAndMessage[1] as Map<dynamic, String>;
-        for (var item in messageAuth.entries) {
-          message = item.value;
-        }
-        FirebaseFirestore.instance
-            .collection('chatrooms')
-            .doc(event.idChatAndMessage.first)
-            .set({'chat': chat, 'lastMessage': message},
-                SetOptions(merge: true));
-        var documentUpdate = await FirebaseFirestore.instance
-            .collection('chatrooms')
-            .doc(event.idChatAndMessage.first)
-            .get();
-        var chatUpdate = (documentUpdate.data()?['chat'] as List<dynamic>);
-        var reversed = chatUpdate.reversed.toList();
-        yield ChatListState(reversed);
+        changeChatList(event.idChatAndMessage.first, event.idChatAndMessage[1]);
+        yield ChatListState(
+            getNewReversedChatList(event.idChatAndMessage.first));
       }
     } catch (_) {}
     if (event is GetReversedChat) {
       var reversed = event.chat.reversed.toList();
       yield ChatListState(reversed);
     }
+  }
+
+  getNewReversedChatList(String id) async {
+    var documentUpdate =
+        await FirebaseFirestore.instance.collection('chatrooms').doc(id).get();
+    var chatUpdate = (documentUpdate.data()?['chat'] as List<dynamic>);
+    return chatUpdate.reversed.toList();
+  }
+
+  void changeChatList(String id, dynamic message) async {
+    var document =
+        await FirebaseFirestore.instance.collection('chatrooms').doc(id).get();
+    List<dynamic> chat = document.data()?['chat'];
+    chat.add(message);
+    var messageAuth = message as Map<dynamic, String>;
+    for (var item in messageAuth.entries) {
+      message = item.value;
+    }
+    FirebaseFirestore.instance
+        .collection('chatrooms')
+        .doc(id)
+        .set({'chat': chat, 'lastMessage': message}, SetOptions(merge: true));
   }
 }
