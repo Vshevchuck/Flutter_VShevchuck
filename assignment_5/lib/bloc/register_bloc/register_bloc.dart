@@ -1,5 +1,6 @@
 import 'package:assignment_5/bloc/register_bloc/register_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -15,6 +16,7 @@ class RegisterBloc extends Bloc<dynamic, RegisterState> {
       yield RegisterEmptyState();
     }
     if (event.runtimeType == UserRegister) {
+      String? newToken = await FirebaseMessaging.instance.getToken();
       User? user = FirebaseAuth.instance.currentUser;
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -25,7 +27,8 @@ class RegisterBloc extends Bloc<dynamic, RegisterState> {
             'email': user.email,
             'name': event.name,
             'id': user.uid,
-            'chatrooms': <String, String>{}
+            'chatrooms': <String, String>{},
+            'device_id': newToken
           });
         }
 

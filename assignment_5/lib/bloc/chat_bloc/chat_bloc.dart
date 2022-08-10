@@ -1,3 +1,5 @@
+import 'package:assignment_5/push_notifications/push_notification.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -44,14 +46,38 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void changeChatList(String id, dynamic message) async {
+    String to='';
     var document =
         await FirebaseFirestore.instance.collection('chatrooms').doc(id).get();
     List<dynamic> chat = document.data()?['chat'];
     chat.add(message);
+    var key;
     var messageAuth = message as Map<dynamic, String>;
     for (var item in messageAuth.entries) {
       message = item.value;
+      key=item.key;
     }
+    var user = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: key)
+        .get();
+    if(user.docs[0].get('id')==document.data()?['id_first_user'])
+      {
+          to=document.data()?['id_second_user'];
+      }
+    else{
+        to=document.data()?['id_first_user'];
+    }
+    var userTo = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: to)
+        .get();
+    print('${user.docs[0].get('name')} $to');
+    await PushNotification.push(
+      to: userTo.docs[0].get('device_id'),
+      title: "Message from ${user.docs[0].get('name')}",
+      body: message
+    );
     FirebaseFirestore.instance
         .collection('chatrooms')
         .doc(id)
