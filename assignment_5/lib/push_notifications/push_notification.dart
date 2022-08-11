@@ -5,9 +5,6 @@ import 'package:http/http.dart' as http;
 import '../models/push_notification_model.dart';
 
 class PushNotification{
-  static const String pushNotificationStart = 'https://';
-  static const String pushNotificationDomainName = 'fcm.googleapis.com';
-  static const String pushNotificationPath = '/fcm/send';
   static const String pushNotificationServerKey ="AAAAzmp6sfg:APA91bHYb6nFgJApW"
       "3H8iDiwzEfsciudHS-KGwraAqqle5E0547oUCfZAPWm2rFCnGbd-Eo1TTy3lRWYpQAEe3fgZ"
       "27xTgMNlzpWmpbm4vaTODSoMY1NAbPGVrkxQM19YTDkcrV_bTy-";
