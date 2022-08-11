@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/chat_bloc/chat_bloc.dart';
-import '../chat_room_page.dart';
 import 'chat_get_list_widget.dart';
 
 class ChatWidget extends StatelessWidget {

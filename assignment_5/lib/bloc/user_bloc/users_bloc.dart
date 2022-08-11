@@ -31,7 +31,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     if (timeUpdate) {
       timeUpdate=false;
       Future.delayed(const Duration(seconds: 5), () {
-        updateLastMessage();
+        _updateLastMessage();
         timeUpdate=true;
       });
     }
@@ -63,7 +63,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  void updateLastMessage() {
+  void _updateLastMessage() {
     FirebaseFirestore.instance
         .collection('chatrooms')
         .where('lastMessage', arrayContains: id)

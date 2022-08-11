@@ -27,9 +27,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
     try {
       if (event is SendMessage) {
-        changeChatList(event.idChatAndMessage.first, event.idChatAndMessage[1]);
+        _changeChatList(event.idChatAndMessage.first, event.idChatAndMessage[1]);
         yield ChatListState(
-            getNewReversedChatList(event.idChatAndMessage.first));
+            _getNewReversedChatList(event.idChatAndMessage.first));
       }
     } catch (_) {}
     if (event is GetReversedChat) {
@@ -38,14 +38,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  getNewReversedChatList(String id) async {
+  _getNewReversedChatList(String id) async {
     var documentUpdate =
         await FirebaseFirestore.instance.collection('chatrooms').doc(id).get();
     var chatUpdate = (documentUpdate.data()?['chat'] as List<dynamic>);
     return chatUpdate.reversed.toList();
   }
 
-  void changeChatList(String id, dynamic message) async {
+  void _changeChatList(String id, dynamic message) async {
     String to='';
     var document =
         await FirebaseFirestore.instance.collection('chatrooms').doc(id).get();
@@ -57,30 +57,35 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       message = item.value;
       key=item.key;
     }
-    var user = await FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: key)
-        .get();
-    if(user.docs[0].get('id')==document.data()?['id_first_user'])
-      {
-          to=document.data()?['id_second_user'];
-      }
-    else{
-        to=document.data()?['id_first_user'];
-    }
-    var userTo = await FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: to)
-        .get();
-    print('${user.docs[0].get('name')} $to');
-    await PushNotification.push(
-      to: userTo.docs[0].get('device_id'),
-      title: "Message from ${user.docs[0].get('name')}",
-      body: message
-    );
+    await _pushNotification(key, document, to, message);
     FirebaseFirestore.instance
         .collection('chatrooms')
         .doc(id)
         .set({'chat': chat, 'lastMessage': message}, SetOptions(merge: true));
   }
+
+  Future <void> _pushNotification(
+      String key,var document,String to,String message)async {
+    var user = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: key)
+        .get();
+    if(user.docs[0].get('id')==document.data()?['id_first_user'])
+    {
+      to=document.data()?['id_second_user'];
+    }
+    else{
+      to=document.data()?['id_first_user'];
+    }
+    var userTo = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: to)
+        .get();
+    await PushNotification.push(
+        to: userTo.docs[0].get('device_id'),
+        title: "Message from ${user.docs[0].get('name')}",
+        body: message
+    );
+  }
+
 }

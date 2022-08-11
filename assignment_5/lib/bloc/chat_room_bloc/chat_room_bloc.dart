@@ -14,23 +14,23 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     bool newRoom = true;
     String id = '';
     if (event is CreateChatRoomEvent) {
-      id = await addChat(event.usersId);
+      id = await _addChat(event.usersId);
       FirebaseFirestore.instance
           .collection('users')
           .snapshots()
           .listen((snapshot) {
         for (int i = snapshot.docs.length - 1; i >= 0; i--) {
           if (snapshot.docs[i].get('id') == event.usersId.first) {
-            addChatToUser(id, event.usersId[1], snapshot, i);
+            _addChatToUser(id, event.usersId[1], snapshot, i);
           }
           if (snapshot.docs[i].get('id') == event.usersId[1]) {
-            addChatToUser(id, event.usersId.first, snapshot, i);
+           _addChatToUser(id, event.usersId.first, snapshot, i);
           }
         }
       });
       yield ChatRoomIdState(id);
     } else if (event is FindChatRoomEvent) {
-      findUserChatRooms(event.users[1].uid, event.users.first.id);
+      _findUserChatRooms(event.users[1].uid, event.users.first.id);
     } else if (event is GetChatRoomEvent && event.chatrooms.isEmpty) {
       yield ChatRoomNewState();
     } else if(event is GetChatRoomEvent ){
@@ -47,7 +47,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
 
   }
 
-  void findUserChatRooms(String loginedUserId, String secondUserId) {
+  void _findUserChatRooms(String loginedUserId, String secondUserId) {
     FirebaseFirestore.instance
         .collection('users')
         .where('id', isEqualTo: loginedUserId)
@@ -57,7 +57,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     });
   }
 
-  void addChatToUser(String id, String secondUser,
+  void _addChatToUser(String id, String secondUser,
       QuerySnapshot<Map<String, dynamic>> snapshot, int i) {
     Map<String, dynamic> chatrooms =
         snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
@@ -68,7 +68,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         .set({'chatrooms': chatrooms}, SetOptions(merge: true));
   }
 
-  Future<String> addChat(List<String> users) async {
+  Future<String> _addChat(List<String> users) async {
     String id = '';
     await FirebaseFirestore.instance.collection('chatrooms').add({
       'id_first_user': users.first,

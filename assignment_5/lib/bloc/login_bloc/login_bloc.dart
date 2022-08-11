@@ -35,13 +35,13 @@ class LoginBloc extends Bloc<dynamic, LoginState> {
         yield UserLoginedState(user!);
       } catch (e) {
         if (e is FirebaseAuthException) {
-          yield LoginErrorState(checkLoginError(event,e));
+          yield LoginErrorState(_checkLoginError(event,e));
         }
       }
     }
   }
 
-  String checkLoginError(UserLogin user,FirebaseAuthException e) {
+  String _checkLoginError(UserLogin user,FirebaseAuthException e) {
     if (user.email.isEmpty || user.password.isEmpty) {
       return ('Fill in all the fields');
     }

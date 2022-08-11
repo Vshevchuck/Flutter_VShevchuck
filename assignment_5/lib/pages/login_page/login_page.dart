@@ -2,13 +2,11 @@ import 'package:assignment_5/generated/locale_keys.g.dart';
 import 'package:assignment_5/pages/login_page/widgets/sign_in_button_widget.dart';
 import 'package:assignment_5/pages/login_page/widgets/text_fields_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/login_bloc/login_bloc.dart';
-import '../../util/text_styles/text_styles.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,8 +21,6 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   void didChangeDependencies() async{
-    String? newToken = await FirebaseMessaging.instance.getToken();
-    print(newToken);
     if (FirebaseAuth.instance.currentUser != null) {
       Future.delayed(Duration.zero, () {
         Navigator.of(context).pushReplacementNamed('/main',

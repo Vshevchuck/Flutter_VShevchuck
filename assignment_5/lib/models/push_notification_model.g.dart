@@ -30,4 +30,5 @@ Map<String, dynamic> $NotificationToJson(Notification instance) =>
     <String, dynamic>{
       'title': instance.title,
       'body': instance.body,
+      'sound':'default'
     };

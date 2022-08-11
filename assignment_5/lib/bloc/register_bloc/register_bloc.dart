@@ -35,12 +35,12 @@ class RegisterBloc extends Bloc<dynamic, RegisterState> {
         yield UserRegisteredState(user!);
       } catch (e) {
         if (e is FirebaseAuthException) {
-          yield RegisterErrorState(checkRegisterError(event,e));
+          yield RegisterErrorState(_checkRegisterError(event,e));
         }
       }
     }
   }
-  String checkRegisterError(UserRegister user,FirebaseAuthException exception) {
+  String _checkRegisterError(UserRegister user,FirebaseAuthException exception) {
     if (user.password.length < 6) {
       return ('password must be at least 6 characters');
     }

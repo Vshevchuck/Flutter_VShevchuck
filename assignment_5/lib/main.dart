@@ -10,10 +10,10 @@ void main() async{
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
   runApp( EasyLocalization(
-      assetLoader: CodegenLoader(),
+      assetLoader: const CodegenLoader(),
       supportedLocales:  const [Locale('en'), Locale('ru')],
       path: 'assets/translation',
       fallbackLocale:  const Locale('en'),
-      child: App()
+      child: const App()
   ),);
 }
