@@ -26,7 +26,7 @@ class CardWidget extends StatelessWidget {
           itemCount: state.loadedUsers.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(left: 12.0,right: 12.0,top:8,bottom: 8),
               child: Center(
                   child: Container(
                 decoration: BoxDecoration(
@@ -61,7 +61,6 @@ class CardWidget extends StatelessWidget {
                       ))),
                   title: UserInfoWidget(
                     name: state.loadedUsers[index].first.name,
-                    email: state.loadedUsers[index].first.email,
                   ),
                   subtitle: Text(
                     state.loadedUsers[index][1],
@@ -73,7 +72,7 @@ class CardWidget extends StatelessWidget {
           },
         );
       }
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator(color: Colors.white,));
     });
   }
 }

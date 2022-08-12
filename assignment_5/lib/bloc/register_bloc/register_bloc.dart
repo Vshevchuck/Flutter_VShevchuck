@@ -31,7 +31,6 @@ class RegisterBloc extends Bloc<dynamic, RegisterState> {
             'device_id': newToken
           });
         }
-
         yield UserRegisteredState(user!);
       } catch (e) {
         if (e is FirebaseAuthException) {

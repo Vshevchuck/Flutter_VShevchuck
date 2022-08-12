@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/user_bloc/users_bloc.dart';
+import '../../util/decorations/decorations.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -30,8 +31,12 @@ class _MainPageState extends State<MainPage> {
             const LogOut(),
           ],
         )),
-        body: CardWidget(
-          dataUser: dataUser,
+        body: Container(
+          height: double.maxFinite,
+          decoration: Decorations.backgroundMainDecoration,
+          child: CardWidget(
+            dataUser: dataUser,
+          ),
         ),
       )),
     );

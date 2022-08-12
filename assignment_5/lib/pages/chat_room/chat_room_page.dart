@@ -12,10 +12,25 @@ class ChatRoomPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final users = (ModalRoute.of(context)?.settings.arguments) as List<dynamic>;
     return SafeArea(
-        child: Scaffold(
-          appBar: AppBar(title: Text(users.first.email)),
-          body:Container(
-              decoration: Decorations.backgroundChatRoomDecoration,
+      child: Scaffold(
+          appBar: AppBar(
+              backgroundColor: Colors.indigoAccent,
+              title: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(users.first.name),
+                        Text(users.first.email,style: const TextStyle(fontSize: 15),),
+                      ],
+                    ),
+                    const SizedBox(width: 30)
+                  ],
+                ),
+              ),
+          body: Container(
+            decoration: Decorations.backgroundChatRoomDecoration,
             child: BlocProvider<ChatRoomBloc>(
               create: (context) => ChatRoomBloc(),
               child: CheckChatRoomWidget(users: users),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 abstract class Decorations{
+  Color? mainPageColor = Colors.grey[350];
   static final buttonDecoration = BoxDecoration(
   borderRadius: BorderRadius.circular(6.0),
   gradient: const LinearGradient(
@@ -15,5 +16,11 @@ abstract class Decorations{
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [Colors.indigoAccent, Colors.white,Colors.white])
+  );
+  static const backgroundMainDecoration =  BoxDecoration(
+      gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.blue,Colors.white])
   );
 }
