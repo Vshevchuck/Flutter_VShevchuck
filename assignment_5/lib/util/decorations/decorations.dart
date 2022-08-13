@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 abstract class Decorations{
-  Color? mainPageColor = Colors.grey[350];
   static final buttonDecoration = BoxDecoration(
   borderRadius: BorderRadius.circular(6.0),
   gradient: const LinearGradient(
@@ -11,6 +10,14 @@ abstract class Decorations{
   colors: [Color(0xff667eea), Color(0xff64b6ff)],
   stops: [0.0, 1.0],
   ));
+  static final buttonDialogDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(6.0),
+      gradient: const LinearGradient(
+        begin: Alignment(-0.95, 0.0),
+        end: Alignment(1.0, 0.0),
+        colors: [Colors.indigoAccent, Colors.deepPurpleAccent],
+        stops: [0.0, 1.0],
+      ));
   static const backgroundChatRoomDecoration =  BoxDecoration(
       gradient: LinearGradient(
           begin: Alignment.topLeft,

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/chat_room_bloc/chat_room_bloc.dart';
 import '../../../bloc/chat_room_bloc/chat_room_state.dart';
 import '../../../generated/locale_keys.g.dart';
+import '../../../util/decorations/decorations.dart';
 import '../../../util/text_styles/text_styles.dart';
 import 'chat_widget.dart';
 
@@ -27,16 +28,27 @@ class CheckChatRoomWidget extends StatelessWidget {
                FittedBox(
                  fit: BoxFit.fitWidth,
                  alignment: Alignment.center,
-                child: Text(LocaleKeys.You_have_not_started_a_dialog_with_this_user_yet.tr(),
-                  style: TextStyles.messageStartDialogTextStyle,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(LocaleKeys.You_have_not_started_a_dialog_with_this_user_yet.tr(),
+                    style: TextStyles.messageStartDialogTextStyle,
+                  ),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                   chatRoomBloc
-                        .add(CreateChatRoomEvent([users[1].uid.toString(), users.first.id.toString()]));
-                  },
-                  child: Text(LocaleKeys.Create_dialog.tr())),
+              const SizedBox(height: 10),
+              Container(
+                height: 40,
+                decoration: Decorations.buttonDialogDecoration,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.transparent,
+                      onSurface: Colors.transparent,
+                      shadowColor: Colors.transparent),
+                    onPressed: () {
+                     chatRoomBloc
+                          .add(CreateChatRoomEvent([users[1].uid.toString(), users.first.id.toString()]));
+                    },
+                    child: Text(LocaleKeys.Create_dialog.tr())),
+              ),
             ],
           ),
         );
