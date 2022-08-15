@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/chat_room_bloc/chat_room_bloc.dart';
+import '../../util/colors/colors_style.dart';
 import '../../util/decorations/decorations.dart';
 
 class ChatRoomPage extends StatelessWidget {
@@ -14,7 +15,7 @@ class ChatRoomPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
-              backgroundColor: Colors.indigoAccent,
+              backgroundColor: ColorStyle.chatAppBarColor,
               title: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

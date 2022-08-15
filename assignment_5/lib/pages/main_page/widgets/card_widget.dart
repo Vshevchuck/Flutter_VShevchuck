@@ -72,7 +72,7 @@ class CardWidget extends StatelessWidget {
           },
         );
       }
-      return const Center(child: CircularProgressIndicator(color: Colors.white,));
+      return const Center(child: CircularProgressIndicator(color: ColorStyle.indicatorColor));
     });
   }
 }

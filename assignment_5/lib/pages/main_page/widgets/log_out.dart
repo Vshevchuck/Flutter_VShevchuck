@@ -14,17 +14,21 @@ class LogOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-    return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-      if(state is UserLogOutState)
-      {
-        Future.delayed(Duration.zero, () {
-          Navigator.pushReplacementNamed(context, '/login');});
-      }
-     return TextButton(
-          onPressed: ()  {
-            userBloc.add(UserLogOutEvent());
-          },
-          child: Text(style:const TextStyle(color: ColorStyle.LogOutButtonColor), LocaleKeys.Log_Out.tr()));
-    });
+    return BlocListener<UserBloc, UserState>(
+      listener: (context, state) {
+        if (state is UserLogOutState) {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
+      },
+      child: TextButton(
+        onPressed: () {
+          userBloc.add(UserLogOutEvent());
+        },
+        child: Text(
+          style: const TextStyle(color: ColorStyle.LogOutButtonColor),
+          LocaleKeys.Log_Out.tr(),
+        ),
+      ),
+    );
   }
 }
