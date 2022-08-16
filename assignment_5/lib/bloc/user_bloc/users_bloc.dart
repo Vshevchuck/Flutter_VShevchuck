@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:assignment_5/bloc/user_bloc/user_event.dart';
 import 'package:assignment_5/bloc/user_bloc/user_state.dart';
+import 'package:assignment_5/networking/firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,19 +18,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
+    final Firestore firestore = Firestore();
     if (event is UserLogOutEvent) {
       await FirebaseAuth.instance.signOut();
       yield UserLogOutState();
     }
     if (event is UserLoadingEvent) {
-      final StreamSubscription lastMessageUpdate = _checkLastMessage();
+      firestore.checkLastMessageAndGetListUsers().listen((snapshot) async {
+        add(UserLoadedEvent((await firestore.getUsers()).docs));});
       id = event.userID;
-      FirebaseFirestore.instance
-          .collection('users')
-          .snapshots()
-          .listen((snapshot) {
-        add(UserLoadedEvent(snapshot.docs));
-      });
     }
     if (event is UserLoadedEvent) {
       List<dynamic> usersAndLastMessage = <dynamic>[];
@@ -37,17 +34,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         for (int i = 0; i < event.docs.length; i++) {
           String lastMessage = LocaleKeys.You_did_not_start_dialog.tr();
           UserModel userInList = UserModel.fromJson(event.docs[i].data());
-          var getLastMessage = await FirebaseFirestore.instance
-              .collection('chatrooms')
-              .where('id', isEqualTo: '$id-${userInList.id}')
-              .get();
+          var getLastMessage = await firestore.getChatroomWithId('$id-${userInList.id}');
           if (getLastMessage.docs.isNotEmpty) {
             lastMessage = getLastMessage.docs.first.get('lastMessage');
           } else {
-            getLastMessage = await FirebaseFirestore.instance
-                .collection('chatrooms')
-                .where('id', isEqualTo: '${userInList.id}-$id')
-                .get();
+            getLastMessage = await firestore.getChatroomWithId('${userInList.id}-$id');
             if (getLastMessage.docs.isNotEmpty) {
               lastMessage = getLastMessage.docs.first.get('lastMessage');
             }
@@ -57,14 +48,5 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         yield UserLoadedState(usersAndLastMessage);
       } catch (_) {}
     }
-  }
-  StreamSubscription _checkLastMessage() {
-    return FirebaseFirestore.instance
-        .collection('chatrooms').orderBy('lastMessage')
-        .snapshots()
-        .listen((snapshot) async {
-      add(UserLoadedEvent((await FirebaseFirestore.instance
-          .collection('users').get()).docs));
-    });
   }
 }

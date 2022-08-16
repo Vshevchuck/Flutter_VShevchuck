@@ -1,8 +1,7 @@
-import 'package:assignment_5/push_notifications/push_notification.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../networking/push_notifications/push_notification.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
 
@@ -70,7 +69,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         .collection('users')
         .where('id', isEqualTo: key)
         .get();
-    if(user.docs[0].get('id')==document.data()?['id_first_user'])
+    if(user.docs.first.get('id')==document.data()?['id_first_user'])
     {
       to=document.data()?['id_second_user'];
     }
@@ -82,8 +81,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         .where('id', isEqualTo: to)
         .get();
     await PushNotification.push(
-        to: userTo.docs[0].get('device_id'),
-        title: "Message from ${user.docs[0].get('name')}",
+        to: userTo.docs.first.get('device_id'),
+        title: "Message from ${user.docs.first.get('name')}",
         body: message
     );
   }

@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:http/http.dart' as http;
 
-import '../models/push_notification_model.dart';
+import '../../models/push_notification_model.dart';
+
 
 class PushNotification{
   static const String pushNotificationServerKey ="AAAAzmp6sfg:APA91bHYb6nFgJApW"

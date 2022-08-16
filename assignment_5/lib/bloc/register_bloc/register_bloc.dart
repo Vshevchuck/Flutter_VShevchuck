@@ -1,41 +1,29 @@
 import 'package:assignment_5/bloc/register_bloc/register_state.dart';
+import 'package:assignment_5/bloc/user_bloc/user_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/user_model.dart';
+import '../../networking/firebase_auth_client.dart';
 
 class RegisterBloc extends Bloc<dynamic, RegisterState> {
   @override
   get initialState => RegisterEmptyState();
-
   @override
   Stream<RegisterState> mapEventToState(dynamic event) async* {
     if (event.runtimeType == String) {
       yield RegisterEmptyState();
     }
     if (event.runtimeType == UserRegister) {
-      String? newToken = await FirebaseMessaging.instance.getToken();
-      User? user = FirebaseAuth.instance.currentUser;
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: event.email, password: event.password);
-        user = FirebaseAuth.instance.currentUser;
-        if (user != null) {
-          FirebaseFirestore.instance.collection('users').add({
-            'email': user.email,
-            'name': event.name,
-            'id': user.uid,
-            'chatrooms': <String, String>{},
-            'device_id': newToken
-          });
-        }
-        yield UserRegisteredState(user!);
-      } catch (e) {
-        if (e is FirebaseAuthException) {
-          yield RegisterErrorState(_checkRegisterError(event,e));
-        }
+      final FirebaseAuthClient authClient = FirebaseAuthClient();
+      dynamic authStatus = authClient.SignUp(event.email, event.password,event.name);
+      if (authStatus is User) {
+          yield UserRegisteredState(authStatus);
+      }
+      else{
+        yield RegisterErrorState(_checkRegisterError(event, authStatus));
       }
     }
   }
