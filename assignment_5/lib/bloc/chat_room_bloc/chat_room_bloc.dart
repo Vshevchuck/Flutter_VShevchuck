@@ -3,9 +3,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../generated/locale_keys.g.dart';
+import '../../networking/firestore.dart';
 import 'chat_room_state.dart';
 
 class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
+  final Firestore firestore = Firestore();
+
   @override
   get initialState => ChatRoomEmptyState();
 
@@ -15,16 +18,13 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     String id = '';
     if (event is CreateChatRoomEvent) {
       id = await _addChat(event.usersId);
-      FirebaseFirestore.instance
-          .collection('users')
-          .snapshots()
-          .listen((snapshot) {
+      firestore.listenUsers().listen((snapshot) {
         for (int i = snapshot.docs.length - 1; i >= 0; i--) {
           if (snapshot.docs[i].get('id') == event.usersId.first) {
             _addChatToUser(id, event.usersId[1], snapshot, i);
           }
           if (snapshot.docs[i].get('id') == event.usersId[1]) {
-           _addChatToUser(id, event.usersId.first, snapshot, i);
+            _addChatToUser(id, event.usersId.first, snapshot, i);
           }
         }
       });
@@ -33,7 +33,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       _findUserChatRooms(event.users[1].uid, event.users.first.id);
     } else if (event is GetChatRoomEvent && event.chatrooms.isEmpty) {
       yield ChatRoomNewState();
-    } else if(event is GetChatRoomEvent ){
+    } else if (event is GetChatRoomEvent) {
       for (var item in event.chatrooms.first.entries) {
         if (item.value == event.chatrooms[1]) {
           newRoom = false;
@@ -44,16 +44,12 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         yield ChatRoomNewState();
       }
     }
-
   }
 
   void _findUserChatRooms(String loginedUserId, String secondUserId) {
-    FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: loginedUserId)
-        .snapshots()
-        .listen((snapshot) {
-      add(GetChatRoomEvent([snapshot.docs[0].get('chatrooms'), secondUserId]));
+    firestore.listenUserbyId(loginedUserId).listen((snapshot) {
+      add(GetChatRoomEvent(
+          [snapshot.docs.first.get('chatrooms'), secondUserId]));
     });
   }
 
@@ -62,23 +58,14 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     Map<String, dynamic> chatrooms =
         snapshot.docs[i].get('chatrooms') as Map<String, dynamic>;
     chatrooms.addAll({id: secondUser});
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(snapshot.docs[i].id)
-        .set({'chatrooms': chatrooms}, SetOptions(merge: true));
+    firestore.addChatToUser(snapshot, i, chatrooms);
   }
 
   Future<String> _addChat(List<String> users) async {
     String id = '';
-    await FirebaseFirestore.instance.collection('chatrooms').add({
-      'id_first_user': users.first,
-      'id_second_user': users[1],
-      'id': '${users.first}-${users[1]}',
-      'chat': [
-        {'admin': LocaleKeys.Start_the_dialog.tr()}
-      ],
-      'lastMessage': ''
-    }).then((value) => ((id = value.id)));
+    await firestore
+        .addChat(users.first, users[1])
+        .then((value) => ((id = value.id)));
     return id;
   }
 }

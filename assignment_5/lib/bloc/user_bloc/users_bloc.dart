@@ -6,19 +6,19 @@ import 'package:assignment_5/networking/firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../generated/locale_keys.g.dart';
 import '../../models/user_model.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
-  @override
-  get initialState => UserLoadingState();
+  final Firestore firestore = Firestore();
   String id = '';
   bool timeUpdate = true;
 
   @override
+  get initialState => UserLoadingState();
+
+  @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
-    final Firestore firestore = Firestore();
     if (event is UserLogOutEvent) {
       await FirebaseAuth.instance.signOut();
       yield UserLogOutState();

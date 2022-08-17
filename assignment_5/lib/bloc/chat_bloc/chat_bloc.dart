@@ -1,11 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../networking/firestore.dart';
 import '../../networking/push_notifications/push_notification.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
+  final Firestore firestore = Firestore();
+
   @override
   get initialState => ChatEmptyState();
 
@@ -13,11 +16,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Stream<ChatState> mapEventToState(ChatEvent event) async* {
     if (event is GetChatId) {
       try {
-        FirebaseFirestore.instance
-            .collection('chatrooms')
-            .doc(event.chatId)
-            .snapshots()
-            .listen((snapshot) {
+        firestore.listenChatRoomById(event.chatId).listen((snapshot) async {
           add(GetReversedChat(snapshot.data()!['chat']));
         });
       } catch (e) {
@@ -39,7 +38,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   _getNewReversedChatList(String id) async {
     var documentUpdate =
-        await FirebaseFirestore.instance.collection('chatrooms').doc(id).get();
+        await firestore.getChatroomById(id);
     var chatUpdate = (documentUpdate.data()?['chat'] as List<dynamic>);
     return chatUpdate.reversed.toList();
   }
@@ -47,7 +46,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   void _changeChatList(String id, dynamic message) async {
     String to='';
     var document =
-        await FirebaseFirestore.instance.collection('chatrooms').doc(id).get();
+        await firestore.getChatroomById(id);
     List<dynamic> chat = document.data()?['chat'];
     chat.add(message);
     var key;
@@ -57,18 +56,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       key=item.key;
     }
     await _pushNotification(key, document, to, message);
-    FirebaseFirestore.instance
-        .collection('chatrooms')
-        .doc(id)
-        .set({'chat': chat, 'lastMessage': message}, SetOptions(merge: true));
+    firestore.addNewMassageToFirestore(id, chat, message);
   }
 
   Future <void> _pushNotification(
       String key,var document,String to,String message)async {
-    var user = await FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: key)
-        .get();
+    var user = await firestore.getUserWithId(key);
     if(user.docs.first.get('id')==document.data()?['id_first_user'])
     {
       to=document.data()?['id_second_user'];
@@ -76,15 +69,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     else{
       to=document.data()?['id_first_user'];
     }
-    var userTo = await FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: to)
-        .get();
+    var userTo = await firestore.getUserWithId(to);
     await PushNotification.push(
         to: userTo.docs.first.get('device_id'),
         title: "Message from ${user.docs.first.get('name')}",
         body: message
     );
   }
-
 }

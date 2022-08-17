@@ -18,7 +18,7 @@ class RegisterBloc extends Bloc<dynamic, RegisterState> {
     }
     if (event.runtimeType == UserRegister) {
       final FirebaseAuthClient authClient = FirebaseAuthClient();
-      dynamic authStatus = authClient.SignUp(event.email, event.password,event.name);
+      dynamic authStatus = await authClient.SignUp(event.email, event.password,event.name);
       if (authStatus is User) {
           yield UserRegisteredState(authStatus);
       }
