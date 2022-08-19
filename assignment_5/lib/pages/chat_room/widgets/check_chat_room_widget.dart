@@ -8,7 +8,7 @@ import '../../../bloc/chat_room_bloc/chat_room_state.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../../util/decorations/decorations.dart';
 import '../../../util/text_styles/text_styles.dart';
-import 'chat_widget.dart';
+import 'chat_get_list_widget.dart';
 
 class CheckChatRoomWidget extends StatelessWidget {
   final users;
@@ -45,7 +45,7 @@ class CheckChatRoomWidget extends StatelessWidget {
                       shadowColor: Colors.transparent),
                     onPressed: () {
                      chatRoomBloc
-                          .add(CreateChatRoomEvent([users[1].uid.toString(), users.first.id.toString()]));
+                          .add(CreateChatRoomEvent(users[1].uid.toString(), users.first.id.toString()));
                     },
                     child: Text(LocaleKeys.Create_dialog.tr())),
               ),
@@ -54,7 +54,7 @@ class CheckChatRoomWidget extends StatelessWidget {
         );
       }
       if (state is ChatRoomIdState) {
-        return ChatWidget(id: state.chatRoomId, userId: users[1].uid.toString());
+        return ChatGetListWidget(id: state.chatRoomId, userId: users[1].uid.toString());
       }
       return const Center(child: CircularProgressIndicator());
     });

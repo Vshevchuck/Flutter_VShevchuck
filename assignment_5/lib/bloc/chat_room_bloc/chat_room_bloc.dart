@@ -17,14 +17,14 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     bool newRoom = true;
     String id = '';
     if (event is CreateChatRoomEvent) {
-      id = await _addChat(event.usersId);
+      id = await _addChat(event.OurId,event.IdSecondUser);
       firestore.listenUsers().listen((snapshot) {
         for (int i = snapshot.docs.length - 1; i >= 0; i--) {
-          if (snapshot.docs[i].get('id') == event.usersId.first) {
-            _addChatToUser(id, event.usersId[1], snapshot, i);
+          if (snapshot.docs[i].get('id') == event.OurId) {
+            _addChatToUser(id, event.IdSecondUser, snapshot, i);
           }
-          if (snapshot.docs[i].get('id') == event.usersId[1]) {
-            _addChatToUser(id, event.usersId.first, snapshot, i);
+          if (snapshot.docs[i].get('id') == event.IdSecondUser) {
+            _addChatToUser(id, event.OurId, snapshot, i);
           }
         }
       });
@@ -61,10 +61,10 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     firestore.addChatToUser(snapshot, i, chatrooms);
   }
 
-  Future<String> _addChat(List<String> users) async {
+  Future<String> _addChat(String ourId,String idSecondUser) async {
     String id = '';
     await firestore
-        .addChat(users.first, users[1])
+        .addChat(ourId,idSecondUser)
         .then((value) => ((id = value.id)));
     return id;
   }

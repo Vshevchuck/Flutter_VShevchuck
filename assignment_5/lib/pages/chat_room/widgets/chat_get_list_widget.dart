@@ -21,10 +21,10 @@ class ChatGetListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
+    final ChatBloc chatBloc = ChatBloc();
     final messageController = TextEditingController();
     chatBloc.add(GetChatId(id));
-    return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
+    return BlocBuilder<ChatBloc, ChatState>(bloc: chatBloc,builder: (context, state) {
       if (state is ChatListState) {
         if (_scrollController.hasClients) {
           scheduleMicrotask(() => (_scrollController

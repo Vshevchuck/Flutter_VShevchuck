@@ -13,6 +13,7 @@ class GetChatRoomEvent extends ChatRoomEvent{
 }
 
 class CreateChatRoomEvent extends ChatRoomEvent{
-  final List<String> usersId;
-  CreateChatRoomEvent(this.usersId);
+  final OurId;
+  final IdSecondUser;
+  CreateChatRoomEvent(this.OurId,this.IdSecondUser);
 }
