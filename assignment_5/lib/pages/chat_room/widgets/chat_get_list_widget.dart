@@ -40,25 +40,22 @@ class ChatGetListWidget extends StatelessWidget {
                   itemCount: state.chat.length,
                   controller: _scrollController,
                   itemBuilder: (context, index) {
-                    String message = 'message';
-                    String auth = 'auth';
-                    var messageAuth = state.chat[index] as Map<String, dynamic>;
-                    for (var item in messageAuth.entries) {
-                      message = item.value;
-                      auth = item.key;
-                    }
+                    Map<String, dynamic> messageAuth =
+                        state.chat[index] as Map<String, dynamic>;
                     return MessageWidget(
-                        userId: userId, auth: auth, message: message);
+                        userId: userId,
+                        auth: messageAuth.entries.first.key,
+                        message: messageAuth.entries.first.value);
                   }),
             ),
             Container(
               decoration: const BoxDecoration(
-                color: Colors.white,
+                  color: Colors.white,
                   border: Border(
-                top: BorderSide(
-                    color: ColorStyle.sendMessageContainerBorderColor,
-                    width: 1.5),
-              )),
+                    top: BorderSide(
+                        color: ColorStyle.sendMessageContainerBorderColor,
+                        width: 1.5),
+                  )),
               child: Row(
                 children: [
                   Expanded(
