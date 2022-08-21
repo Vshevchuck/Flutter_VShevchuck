@@ -13,6 +13,7 @@ import '../../../util/decorations/decorations.dart';
 import '../login_page.dart';
 
 class SignInButtonWidget extends StatelessWidget {
+  static const double? widthButton=300;
   const SignInButtonWidget({Key? key}) : super(key: key);
 
   @override
@@ -36,7 +37,7 @@ class SignInButtonWidget extends StatelessWidget {
       return Container(
         decoration: Decorations.buttonDecoration,
         child: SizedBox(
-          width: 300,
+          width: widthButton,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(primary: Colors.transparent,
               onSurface: Colors.transparent,

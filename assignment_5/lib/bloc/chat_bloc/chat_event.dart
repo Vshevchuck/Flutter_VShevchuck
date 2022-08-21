@@ -10,6 +10,7 @@ class GetReversedChat extends ChatEvent{
 }
 
 class SendMessage extends ChatEvent {
-  final List<dynamic> idChatAndMessage;
-  SendMessage(this.idChatAndMessage);
+ final String idChatRoom;
+ final Map <String,dynamic> messageAndAuth;
+  SendMessage(this.idChatRoom,this.messageAndAuth);
 }

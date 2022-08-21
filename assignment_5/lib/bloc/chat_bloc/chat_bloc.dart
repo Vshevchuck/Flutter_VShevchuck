@@ -25,9 +25,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
     try {
       if (event is SendMessage) {
-        _changeChatList(event.idChatAndMessage.first, event.idChatAndMessage[1]);
+        _changeChatList(event.idChatRoom, event.messageAndAuth);
         yield ChatListState(
-            _getNewReversedChatList(event.idChatAndMessage.first));
+            _getNewReversedChatList(event.idChatRoom));
       }
     } catch (_) {}
     if (event is GetReversedChat) {
@@ -50,7 +50,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     List<dynamic> chat = document.data()?['chat'];
     chat.add(message);
     var key;
-    var messageAuth = message as Map<dynamic, String>;
+    var messageAuth = message as Map<String,dynamic>;
     for (var item in messageAuth.entries) {
       message = item.value;
       key=item.key;

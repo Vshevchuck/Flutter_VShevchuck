@@ -18,19 +18,21 @@ class CheckChatRoomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ChatRoomBloc chatRoomBloc = BlocProvider.of<ChatRoomBloc>(context);
-    chatRoomBloc.add(FindChatRoomEvent(users));
+    chatRoomBloc.add(FindChatRoomEvent(users[1], users.first));
     return BlocBuilder<ChatRoomBloc, ChatRoomState>(builder: (context, state) {
       if (state is ChatRoomNewState) {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               FittedBox(
-                 fit: BoxFit.fitWidth,
-                 alignment: Alignment.center,
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(LocaleKeys.You_have_not_started_a_dialog_with_this_user_yet.tr(),
+                  child: Text(
+                    LocaleKeys.You_have_not_started_a_dialog_with_this_user_yet
+                        .tr(),
                     style: TextStyles.messageStartDialogTextStyle,
                   ),
                 ),
@@ -40,12 +42,13 @@ class CheckChatRoomWidget extends StatelessWidget {
                 height: 40,
                 decoration: Decorations.buttonDialogDecoration,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.transparent,
-                      onSurface: Colors.transparent,
-                      shadowColor: Colors.transparent),
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.transparent,
+                        onSurface: Colors.transparent,
+                        shadowColor: Colors.transparent),
                     onPressed: () {
-                     chatRoomBloc
-                          .add(CreateChatRoomEvent(users[1].uid.toString(), users.first.id.toString()));
+                      chatRoomBloc.add(CreateChatRoomEvent(
+                          users[1].uid.toString(), users.first.id.toString()));
                     },
                     child: Text(LocaleKeys.Create_dialog.tr())),
               ),
@@ -54,7 +57,8 @@ class CheckChatRoomWidget extends StatelessWidget {
         );
       }
       if (state is ChatRoomIdState) {
-        return ChatGetListWidget(id: state.chatRoomId, userId: users[1].uid.toString());
+        return ChatGetListWidget(
+            id: state.chatRoomId, userId: users[1].uid.toString());
       }
       return const Center(child: CircularProgressIndicator());
     });

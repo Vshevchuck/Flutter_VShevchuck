@@ -69,10 +69,9 @@ class ChatGetListWidget extends StatelessWidget {
                   ),
                   IconButton(
                       onPressed: () {
-                        chatBloc.add(SendMessage([
+                        chatBloc.add(SendMessage(
                           id,
-                          {userId: messageController.text}
-                        ]));
+                          {userId: messageController.text}));
                         messageController.text = "";
                       },
                       icon: const Icon(Icons.send))

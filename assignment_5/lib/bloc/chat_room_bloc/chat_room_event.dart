@@ -3,17 +3,19 @@ import '../user_bloc/user_event.dart';
 class ChatRoomEvent{}
 
 class FindChatRoomEvent extends ChatRoomEvent{
-  final List<dynamic> users;
-  FindChatRoomEvent(this.users);
+  final ourUser;
+  final secondUser;
+  FindChatRoomEvent(this.ourUser,this.secondUser);
 }
 
 class GetChatRoomEvent extends ChatRoomEvent{
-  final List<dynamic> chatrooms;
-  GetChatRoomEvent(this.chatrooms);
+  final Map<String,dynamic> chatroom;
+  final String secondUserId;
+  GetChatRoomEvent(this.chatroom,this.secondUserId);
 }
 
 class CreateChatRoomEvent extends ChatRoomEvent{
-  final OurId;
-  final IdSecondUser;
+  final String OurId;
+  final String IdSecondUser;
   CreateChatRoomEvent(this.OurId,this.IdSecondUser);
 }

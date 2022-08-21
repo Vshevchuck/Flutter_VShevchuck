@@ -13,10 +13,10 @@ class RegisterBloc extends Bloc<dynamic, RegisterState> {
   get initialState => RegisterEmptyState();
   @override
   Stream<RegisterState> mapEventToState(dynamic event) async* {
-    if (event.runtimeType == String) {
+    if (event is String) {
       yield RegisterEmptyState();
     }
-    if (event.runtimeType == UserRegister) {
+    if (event is UserRegister) {
       final FirebaseAuthClient authClient = FirebaseAuthClient();
       dynamic authStatus = await authClient.SignUp(event.email, event.password,event.name);
       if (authStatus is User) {

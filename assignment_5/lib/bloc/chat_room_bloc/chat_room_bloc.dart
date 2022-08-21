@@ -30,12 +30,12 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       });
       yield ChatRoomIdState(id);
     } else if (event is FindChatRoomEvent) {
-      _findUserChatRooms(event.users[1].uid, event.users.first.id);
-    } else if (event is GetChatRoomEvent && event.chatrooms.isEmpty) {
+      _findUserChatRooms(event.ourUser.uid, event.secondUser.id);
+    } else if (event is GetChatRoomEvent && event.chatroom.isEmpty) {
       yield ChatRoomNewState();
     } else if (event is GetChatRoomEvent) {
-      for (var item in event.chatrooms.first.entries) {
-        if (item.value == event.chatrooms[1]) {
+      for (var item in event.chatroom.entries) {
+        if (item.value == event.secondUserId) {
           newRoom = false;
           yield ChatRoomIdState(item.key);
         }
@@ -49,7 +49,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   void _findUserChatRooms(String loginedUserId, String secondUserId) {
     firestore.listenUserbyId(loginedUserId).listen((snapshot) {
       add(GetChatRoomEvent(
-          [snapshot.docs.first.get('chatrooms'), secondUserId]));
+          snapshot.docs.first.get('chatrooms'), secondUserId));
     });
   }
 

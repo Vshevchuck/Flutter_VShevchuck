@@ -16,10 +16,10 @@ class LoginBloc extends Bloc<dynamic, LoginState> {
   @override
   Stream<LoginState> mapEventToState(dynamic event) async* {
     final FirebaseAuthClient authClient = FirebaseAuthClient();
-    if (event.runtimeType == String) {
+    if (event is String) {
       yield LoginEmptyState();
     }
-    if (event.runtimeType == UserLogin) {
+    if (event is UserLogin) {
       dynamic authStatus = await authClient.SignIn(event.email, event.password);
       if (authStatus is User) {
         yield UserLoginedState(authStatus);
