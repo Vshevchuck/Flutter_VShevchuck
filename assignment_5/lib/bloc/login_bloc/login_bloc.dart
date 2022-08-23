@@ -1,3 +1,4 @@
+import 'package:assignment_5/bloc/login_bloc/login_event.dart';
 import 'package:assignment_5/bloc/login_bloc/login_state.dart';
 import 'package:assignment_5/networking/firebase_auth_client.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,24 +8,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/user_model.dart';
 import '../user_bloc/user_state.dart';
 
-class LoginBloc extends Bloc<dynamic, LoginState> {
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
   UserLogin userLogin = UserLogin('Empty', 'Empty');
 
   @override
   get initialState => LoginEmptyState();
 
   @override
-  Stream<LoginState> mapEventToState(dynamic event) async* {
+  Stream<LoginState> mapEventToState(LoginEvent event) async* {
     final FirebaseAuthClient authClient = FirebaseAuthClient();
-    if (event is String) {
+    if (event is SetInitialEvent) {
       yield LoginEmptyState();
     }
-    if (event is UserLogin) {
-      dynamic authStatus = await authClient.SignIn(event.email, event.password);
+    if (event is GetUserDataEvent) {
+      dynamic authStatus =
+          await authClient.SignIn(event.userLogin.email, event.userLogin.password);
       if (authStatus is User) {
         yield UserLoginedState(authStatus);
       } else {
-        yield LoginErrorState(_checkLoginError(event, authStatus));
+        yield LoginErrorState(_checkLoginError(event.userLogin, authStatus));
       }
     }
   }

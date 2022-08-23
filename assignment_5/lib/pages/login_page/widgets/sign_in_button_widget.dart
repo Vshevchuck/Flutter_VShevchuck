@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:assignment_5/bloc/login_bloc/login_event.dart';
 import 'package:assignment_5/pages/login_page/widgets/dialog_builder_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import '../../../util/decorations/decorations.dart';
 import '../login_page.dart';
 
 class SignInButtonWidget extends StatelessWidget {
-  static const double? widthButton=300;
+  static const double widthButton=300;
   const SignInButtonWidget({Key? key}) : super(key: key);
 
   @override
@@ -29,7 +30,7 @@ class SignInButtonWidget extends StatelessWidget {
         });
       }
       if (state is LoginErrorState) {
-        loginBloc.add('initial');
+        loginBloc.add(SetInitialEvent());
         LoginPageState.message = state.message;
         scheduleMicrotask(() => Navigator.of(context)
             .restorablePush(ShowMessage.dialogBuilderWidget));
@@ -46,7 +47,7 @@ class SignInButtonWidget extends StatelessWidget {
               UserLogin userModel = UserLogin(
                   LoginPageState.emailController.text,
                   LoginPageState.passwordController.text);
-              loginBloc.add(userModel);
+              loginBloc.add(GetUserDataEvent(userModel));
               LoginPageState.emailController.text = "";
               LoginPageState.passwordController.text = "";
             },

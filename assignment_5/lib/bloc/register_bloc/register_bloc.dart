@@ -1,33 +1,36 @@
+import 'package:assignment_5/bloc/register_bloc/register_event.dart';
 import 'package:assignment_5/bloc/register_bloc/register_state.dart';
 import 'package:assignment_5/bloc/user_bloc/user_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/user_model.dart';
 import '../../networking/firebase_auth_client.dart';
 
-class RegisterBloc extends Bloc<dynamic, RegisterState> {
+class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   @override
   get initialState => RegisterEmptyState();
+
   @override
-  Stream<RegisterState> mapEventToState(dynamic event) async* {
-    if (event is String) {
+  Stream<RegisterState> mapEventToState(RegisterEvent event) async* {
+    if (event is SetInitialRegisterEvent) {
       yield RegisterEmptyState();
     }
-    if (event is UserRegister) {
+    if (event is GetUserDataEvent) {
       final FirebaseAuthClient authClient = FirebaseAuthClient();
-      dynamic authStatus = await authClient.SignUp(event.email, event.password,event.name);
+      dynamic authStatus = await authClient.SignUp(event.userRegister.email,
+          event.userRegister.password, event.userRegister.name);
       if (authStatus is User) {
-          yield UserRegisteredState(authStatus);
-      }
-      else{
-        yield RegisterErrorState(_checkRegisterError(event, authStatus));
+        yield UserRegisteredState(authStatus);
+      } else {
+        yield RegisterErrorState(_checkRegisterError(event.userRegister, authStatus));
       }
     }
   }
-  String _checkRegisterError(UserRegister user,FirebaseAuthException exception) {
+
+  String _checkRegisterError(
+      UserRegister user, FirebaseAuthException exception) {
     if (user.password.length < 6) {
       return ('password must be at least 6 characters');
     }

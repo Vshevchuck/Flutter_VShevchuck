@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/register_bloc/register_bloc.dart';
+import '../../../bloc/register_bloc/register_event.dart';
 import '../../../bloc/register_bloc/register_state.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../../models/user_model.dart';
@@ -32,7 +33,7 @@ class ButtonRegisterWidget extends StatelessWidget {
           });
         }
         if (state is RegisterErrorState) {
-          registerBloc.add('initial');
+          registerBloc.add(SetInitialRegisterEvent());
           LoginPageState.message = state.message;
           scheduleMicrotask(() => {
                 Navigator.of(context)
@@ -54,7 +55,7 @@ class ButtonRegisterWidget extends StatelessWidget {
                           RegisterPage.nameController.text,
                           RegisterPage.emailController.text,
                           RegisterPage.passwordController.text);
-                      registerBloc.add(userModel);
+                      registerBloc.add(GetUserDataEvent(userModel));
                       RegisterPage.emailController.text = "";
                       RegisterPage.passwordController.text = "";
                       RegisterPage.nameController.text = "";
