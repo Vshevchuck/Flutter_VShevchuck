@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animations/pages/widgets/animated_container_widget.dart';
-import 'package:flutter_animations/pages/widgets/animated_text_widget.dart';
+import 'package:flutter_animations/pages/main_page/widgets/animated_container_widget.dart';
+import 'package:flutter_animations/pages/main_page/widgets/animated_text_widget.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainPage> createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
-  bool state = true;
+class MainPageState extends State<MainPage> {
+  static bool state = true;
 
   @override
   void initState() {
@@ -25,16 +25,26 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: IconButton(
-            onPressed: () {
-              setState(() {
-                state = !state;
-              });
-            },
-            icon: const Icon(
-              Icons.start,
-              color: Colors.deepPurple,
-            )),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/second');
+                },
+                icon: const Icon(Icons.near_me)),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    state = !state;
+                  });
+                },
+                icon: const Icon(
+                  Icons.start,
+                  color: Colors.deepPurple,
+                )),
+          ],
+        ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
