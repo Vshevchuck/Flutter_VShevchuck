@@ -28,7 +28,9 @@ class _SecondPageState extends State<SecondPage> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.near_me)),
+          IconButton(onPressed: () {
+            Navigator.pushNamed(context, '/third');
+          }, icon: const Icon(Icons.near_me)),
           IconButton(
               onPressed: () {
                 setState(() {
